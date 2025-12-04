@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-
+import bag from '../assets/b2.jpg'
 export default function Onboarding() {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-between px-6 py-10">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-between px-6 py-1">
       
       {/* Top intro section */}
       <motion.div
@@ -28,10 +28,10 @@ export default function Onboarding() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7 }}
-        className="w-full max-w-xs aspect-3/4 rounded-3xl overflow-hidden shadow-2xl bg-zinc-800"
+        className="w-full max-w-xs aspect-3/4 md:aspect-auto rounded-3xl overflow-hidden shadow-2xl bg-zinc-800"
       >
         <img
-          src="https://images.unsplash.com/photo-1600185365483-26d7a4bdd27e"
+          src={bag}
           alt="Luxury bag"
           className="w-full h-full object-cover"
         />
