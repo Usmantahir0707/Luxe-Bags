@@ -213,7 +213,7 @@ export default function Home() {
                         className="flex items-center gap-2 px-3 py-2 rounded-full bg-linear-to-br from-rose-500 to-pink-600 text-white"
                       >
                         <User className="w-5 h-5" />
-                        <span className="hidden md:inline">{user.name}</span>
+                        <span className=" md:inline">{user.name}</span>
                       </motion.button>
 
                       <AnimatePresence>
@@ -271,10 +271,10 @@ export default function Home() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setIsLoginModalOpen(true)}
-                      className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-br from-rose-500 to-pink-600 text-white"
+                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-br from-rose-500 to-pink-600 text-white"
                     >
                       <User className="w-5 h-5" />
-                      <span>Login</span>
+                      
                     </motion.button>
                   )}
 
