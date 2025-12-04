@@ -1,0 +1,69 @@
+// src/components/CartDrawer.jsx
+// Simple sliding drawer cart - single file
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+
+export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onUpdateQuantity = () => {}, onRemoveItem = () => {}, onCheckout = () => {} }) {
+  const total = items.reduce((s, it) => s + it.price * it.quantity, 0);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
+          <motion.aside
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween' }}
+            className="fixed right-0 top-0 h-full w-full max-w-md z-50 bg-zinc-900 border-l border-zinc-800 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+              <h3 className="text-white text-lg">Your Cart</h3>
+              <button onClick={onClose} className="p-2 rounded-full bg-zinc-800 text-zinc-300 hover:text-white"><X className="w-5 h-5" /></button>
+            </div>
+
+            <div className="p-4 overflow-y-auto max-h-[calc(100vh-220px)]">
+              {items.length === 0 ? (
+                <div className="text-center text-zinc-500 py-12">Your cart is empty.</div>
+              ) : (
+                <ul className="space-y-4">
+                  {items.map((it) => (
+                    <li key={it.id} className="flex items-center gap-3">
+                      <img src={it.image} alt={it.name} loading="lazy" className="w-16 h-16 object-cover rounded-md" />
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-white text-sm">{it.name}</p>
+                            <p className="text-zinc-400 text-xs">${it.price.toFixed(2)}</p>
+                          </div>
+                          <button onClick={() => onRemoveItem(it.id)} className="text-rose-500 text-sm">Remove</button>
+                        </div>
+
+                        <div className="mt-3 flex items-center gap-2">
+                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1))} className="px-2 py-1 rounded bg-zinc-800">-</button>
+                          <div className="px-3 py-1 rounded bg-zinc-800 text-sm">{it.quantity}</div>
+                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1)} className="px-2 py-1 rounded bg-zinc-800">+</button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-zinc-800">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-zinc-400">Subtotal</span>
+                <span className="font-semibold text-white">${total.toFixed(2)}</span>
+              </div>
+              <button onClick={onCheckout} className="w-full py-3 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white font-semibold">Checkout</button>
+            </div>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
