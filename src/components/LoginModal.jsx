@@ -96,7 +96,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setMode('login')}
-                    className={`flex-1 py-1 rounded-full text-xs transition-all ${
+                    className={`flex-1 py-2 rounded-full text-xs transition-all ${
                       mode === 'login'
                         ? 'bg-linear-to-r from-rose-500 to-pink-600 text-white'
                         : 'text-zinc-400 hover:text-white'
@@ -107,7 +107,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setMode('register')}
-                    className={`flex-1 py-1 rounded-full text-xs transition-all ${
+                    className={`flex-1 py-2 rounded-full text-xs transition-all ${
                       mode === 'register'
                         ? 'bg-linear-to-r from-rose-500 to-pink-600 text-white'
                         : 'text-zinc-400 hover:text-white'
@@ -215,7 +215,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
 
                 {/* Social */}
                 <div className="flex items-center gap-2 justify-center mt-3">
-                  {['G', 'f', '🍎'].map((icon, idx) => (
+                  {['🅖', '🅕', '🍎'].map((icon, idx) => (
                     <motion.button
                       key={idx}
                       whileHover={{ scale: 1.05 }}

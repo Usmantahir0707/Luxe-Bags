@@ -83,7 +83,7 @@ const ProductCard = forwardRef(function ProductCard(
       <div className="mt-4 px-1">
         <h3 className="text-white text-sm font-medium">{name}</h3>
         <p className="text-sm font-semibold mt-1 bg-clip-text text-transparent bg-linear-to-r from-rose-400 to-pink-500">
-          ${Number(price).toFixed(2)}
+          Rs.{Number(price).toFixed(2)}
         </p>
       </div>
     </motion.div>

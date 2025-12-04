@@ -37,15 +37,15 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
                         <div className="flex items-start justify-between">
                           <div>
                             <p className="text-white text-sm">{it.name}</p>
-                            <p className="text-zinc-400 text-xs">${it.price.toFixed(2)}</p>
+                            <p className="text-zinc-400 text-xs">Rs.{it.price.toFixed(2)}</p>
                           </div>
                           <button onClick={() => onRemoveItem(it.id)} className="text-rose-500 text-sm">Remove</button>
                         </div>
 
                         <div className="mt-3 flex items-center gap-2">
-                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1))} className="px-2 py-1 rounded bg-zinc-800">-</button>
-                          <div className="px-3 py-1 rounded bg-zinc-800 text-sm">{it.quantity}</div>
-                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1)} className="px-2 py-1 rounded bg-zinc-800">+</button>
+                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1))} className="px-2 py-1 rounded bg-zinc-800 text-white">-</button>
+                          <div className="px-3 py-1 rounded bg-zinc-800 text-sm text-white">{it.quantity}</div>
+                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1)} className="px-2 py-1 rounded bg-zinc-800 text-white">+</button>
                         </div>
                       </div>
                     </li>
@@ -57,7 +57,7 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
             <div className="p-4 border-t border-zinc-800">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-zinc-400">Subtotal</span>
-                <span className="font-semibold text-white">${total.toFixed(2)}</span>
+                <span className="font-semibold text-white">Rs.{total.toFixed(2)}</span>
               </div>
               <button onClick={onCheckout} className="w-full py-3 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white font-semibold">Checkout</button>
             </div>

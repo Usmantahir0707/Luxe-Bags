@@ -34,15 +34,15 @@ export default function CheckoutPage({ cartItems = [], onBack = () => {}, onProc
                 <li key={it.id} className="flex items-center justify-between">
                   <div>
                     <div className="text-sm">{it.name}</div>
-                    <div className="text-xs text-zinc-400">{it.quantity} × ${it.price.toFixed(2)}</div>
+                    <div className="text-xs text-zinc-400">{it.quantity} × Rs.{it.price.toFixed(2)}</div>
                   </div>
-                  <div className="text-sm">${(it.price*it.quantity).toFixed(2)}</div>
+                  <div className="text-sm">Rs.{(it.price*it.quantity).toFixed(2)}</div>
                 </li>
               ))}
             </ul>
             <div className="flex items-center justify-between text-zinc-400 mb-4">
               <span>Subtotal</span>
-              <strong className="text-white">${total.toFixed(2)}</strong>
+              <strong className="text-white">Rs.{total.toFixed(2)}</strong>
             </div>
 
             <button onClick={onProceedToPayment} className="w-full py-3 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white">Proceed to payment</button>

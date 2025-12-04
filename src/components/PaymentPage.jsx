@@ -30,7 +30,7 @@ export default function PaymentPage({ total = 0, onBack = () => {}, onComplete =
 
           <div className="flex items-center justify-between mb-4">
             <div className="text-zinc-400">Total</div>
-            <div className="text-xl font-semibold">${Number(total).toFixed(2)}</div>
+            <div className="text-xl font-semibold">Rs.{Number(total).toFixed(2)}</div>
           </div>
 
           <button disabled={isProcessing} className="w-full py-3 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white">
