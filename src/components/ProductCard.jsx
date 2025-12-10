@@ -28,17 +28,17 @@ const ProductCard = forwardRef(function ProductCard(
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -8 }}
-      transition={{ duration: 0.28 }}
+      transition={{ duration: 0.68 }}
       className="group cursor-pointer relative"
       onClick={() => onQuickView(id)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === 'Enter' ? onQuickView(id) : null)}
     >
-      <div className="relative overflow-hidden rounded-2xl bg-zinc-900 aspect-3/4">
+      <div className="relative overflow-hidden rounded-2xl bg-zinc-900 aspect-square">
         <img
           src={image}
           alt={name}

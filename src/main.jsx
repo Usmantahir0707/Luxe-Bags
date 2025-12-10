@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-import Onboarding from './components/Onboarding.jsx'
 import Home from './components/Home.jsx'
 
 const route = createBrowserRouter([
@@ -13,12 +12,8 @@ const route = createBrowserRouter([
     children: [
       {
         path:'/',
-        element: <Onboarding/>
-      },
-      {
-        path:'/home',
         element: <Home/>
-      }
+      },
     ]
   }
 ])

@@ -1,6 +1,6 @@
 // src/components/ProductDetail.jsx
 // Product detail modal (single-file)
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Heart, ShoppingBag, Star } from 'lucide-react';
 
@@ -11,7 +11,7 @@ import { X, Heart, ShoppingBag, Star } from 'lucide-react';
  * - onAddToCart(id)
  */
 export default function ProductDetail({ product, onClose = () => {}, onAddToCart = () => {} }) {
-  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [isFavorite, setIsFavorite] = useState(false);
 
   if (!product) return null;
@@ -35,7 +35,8 @@ export default function ProductDetail({ product, onClose = () => {}, onAddToCart
         aria-modal="true"
         aria-label={`${product.name} details`}
       >
-        <div className="grid md:grid-cols-2 h-full max-h-[90vh]">
+        <div className="grid h-[90vh] grid-rows-[40%_60%] md:grid-rows-1 md:grid-cols-[50%_50%]">
+
           {/* Image */}
           <div className="relative bg-zinc-950">
             <button
@@ -59,8 +60,8 @@ export default function ProductDetail({ product, onClose = () => {}, onAddToCart
           </div>
 
           {/* Details */}
-          <div className="flex flex-col overflow-y-auto bg-zinc-900">
-            <div className="p-8 flex-1">
+          <div className="flex flex-col h-[full] overflow-y-auto bg-zinc-900">
+            <div className="p-4 flex-1">
               <div className="inline-block px-3 py-1 bg-zinc-800 text-zinc-300 rounded-full mb-4 text-xs">
                 {product.category}
               </div>
@@ -80,7 +81,7 @@ export default function ProductDetail({ product, onClose = () => {}, onAddToCart
                 <span className="text-zinc-400">({product.rating || 0}.0)</span>
               </div>
 
-              <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-500 mb-6">
+              <p className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-rose-400 to-pink-500 mb-6">
                 ${Number(product.price).toFixed(2)}
               </p>
 
@@ -93,7 +94,7 @@ export default function ProductDetail({ product, onClose = () => {}, onAddToCart
                   {(product.colors || []).map((c, idx) => (
                     <button
                       key={c + idx}
-                      onClick={() => setSelectedColor(idx)}
+                      onClick={() => setSelectedColor(c)}
                       className={`w-10 h-10 rounded-full border-2 transition-all ${selectedColor === idx ? 'border-rose-500 scale-110 shadow-lg shadow-rose-500/30' : 'border-zinc-700'}`}
                       style={{ backgroundColor: c }}
                       aria-label={`Select color ${c}`}
@@ -116,8 +117,8 @@ export default function ProductDetail({ product, onClose = () => {}, onAddToCart
 
             <div className="p-8 pt-0">
               <button
-                onClick={() => onAddToCart(product.id)}
-                className="w-full py-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-semibold flex items-center justify-center gap-3 shadow-lg"
+                onClick={() => onAddToCart(product._id, selectedColor)}
+                className="w-full py-4 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white font-semibold flex items-center justify-center gap-3 shadow-lg"
               >
                 <ShoppingBag className="w-5 h-5" />
                 Add to Bag
