@@ -71,7 +71,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
-
+    
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-linear-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center">
                     <LogIn className="w-6 h-6 text-white" />

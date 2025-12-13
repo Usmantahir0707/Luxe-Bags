@@ -21,83 +21,7 @@ import Footer from "./Footer";
 import LoginModal from "./LoginModal";
 import Toaster from "./ui/Toaster";
 import { toast } from "sonner";
-
-// --- Mock product data (kept from your original)
-// You can replace this with fetched data later.
-// const products = [
-//   {
-//     id: 1,
-//     name: "Classic Leather Handbag",
-//     price: 299.99,
-//     image:
-//       "https://images.unsplash.com/photo-1591348278863-a8fb3887e2aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-//     category: "Handbag",
-//     description:
-//       "Elegant leather handbag with spacious interior and premium finishing. Perfect for everyday use or special occasions.",
-//     colors: ["#1a1a1a", "#8B4513", "#D2691E"],
-//     rating: 5,
-//   },
-//   {
-//     id: 2,
-//     name: "Designer Shoulder Bag",
-//     price: 349.99,
-//     image:
-//       "https://images.unsplash.com/photo-1760624294514-ca40aafe3d96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-//     category: "Shoulder",
-//     description:
-//       "Sophisticated shoulder bag with adjustable strap and multiple compartments for organized storage.",
-//     colors: ["#000000", "#ffffff", "#FF69B4"],
-//     rating: 5,
-//   },
-//   {
-//     id: 3,
-//     name: "Luxury Tote Bag",
-//     price: 279.99,
-//     image:
-//       "https://images.unsplash.com/photo-1624687943971-e86af76d57de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-//     category: "Tote",
-//     description:
-//       "Spacious tote bag made from premium leather, ideal for work or shopping with reinforced handles.",
-//     colors: ["#8B4513", "#000000", "#696969"],
-//     rating: 4,
-//   },
-//   {
-//     id: 4,
-//     name: "Crossbody Messenger",
-//     price: 199.99,
-//     image:
-//       "https://images.unsplash.com/photo-1718622795525-2295971921ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-//     category: "Crossbody",
-//     description:
-//       "Compact crossbody bag with adjustable strap, perfect for hands-free convenience and style.",
-//     colors: ["#000000", "#A52A2A", "#4B4B4B"],
-//     rating: 5,
-//   },
-//   {
-//     id: 5,
-//     name: "Evening Clutch",
-//     price: 159.99,
-//     image:
-//       "https://images.unsplash.com/photo-1758817991388-54a98d456317?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-//     category: "Clutch",
-//     description:
-//       "Elegant clutch for evening events, featuring delicate details and a sophisticated silhouette.",
-//     colors: ["#FFD700", "#C0C0C0", "#000000"],
-//     rating: 5,
-//   },
-//   {
-//     id: 6,
-//     name: "Fashion Backpack",
-//     price: 249.99,
-//     image:
-//       "https://images.unsplash.com/photo-1667411424594-403300e5cc35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-//     category: "Backpack",
-//     description:
-//       "Stylish backpack with multiple pockets and padded straps for ultimate comfort and functionality.",
-//     colors: ["#000000", "#8B4513", "#4169E1"],
-//     rating: 4,
-//   },
-// ];
+import { useShopContext } from "../context/ShopContext";
 
 const categories = [
   "All",
@@ -112,31 +36,28 @@ const categories = [
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, setCartItems, orderForm, setOrderForm } = useShopContext();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentView, setCurrentView] = useState("shop"); // shop | checkout | payment | success
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [products, setProducts] = useState([])
-
+  const [products, setProducts] = useState([]);
 
   // Getting product data
- useEffect(()=>{
-  const getProducts = async ()=>{
-    try{
-      const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products`)
-      const data = await res.json()
-     setProducts(data.data)
-     
-    }
-    catch(err){
-      console.log(err)
-    }
-  }
-  getProducts()
- }, [])
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products`);
+        const data = await res.json();
+        setProducts(data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getProducts();
+  }, []);
 
   // Search n Filter logic
   const filteredProducts = products.filter((product) => {
@@ -150,9 +71,8 @@ export default function Home() {
 
   // handle add to cart
   const handleAddToCart = (productId, selectedColor) => {
-    
     const product = products.find((p) => {
-     return p._id === productId
+      return p._id === productId;
     });
     if (!product) return;
     setCartItems((prev) => {
@@ -174,7 +94,7 @@ export default function Home() {
           price: product.price,
           image: product.image,
           quantity: 1,
-          color: selectedColor ? selectedColor : product.colors[0]
+          color: selectedColor ? selectedColor : product.colors[0],
         },
       ];
     });
@@ -400,23 +320,22 @@ export default function Home() {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14">
               <AnimatePresence>
-                {
-                filteredProducts.length > 0 &&
-                filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product._id}
-                    id={product._id}
-                    name={product.name}
-                    price={product.price}
-                    image={product.image}
-                    category={product.category}
-                    onQuickView={(id) => {
-                      const p = products.find((x) => x._id === id);
-                      if (p) setSelectedProduct(p);
-                    }}
-                    onAddToCart={handleAddToCart}
-                  />
-                ))}
+                {filteredProducts.length > 0 &&
+                  filteredProducts.map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      id={product._id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
+                      category={product.category}
+                      onQuickView={(id) => {
+                        const p = products.find((x) => x._id === id);
+                        if (p) setSelectedProduct(p);
+                      }}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
               </AnimatePresence>
             </motion.div>
 
@@ -436,9 +355,8 @@ export default function Home() {
           <Footer />
         </>
       )}
-         
-     
-     {/* Login Modal */}
+
+      {/* Login Modal */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
@@ -475,20 +393,18 @@ export default function Home() {
         }}
       />
 
-      
-        
-           {/* Check-out */}
+      {/* Check-out */}
       {currentView === "checkout" && (
         <CheckoutPage
           cartItems={cartItems}
           onBack={() => setCurrentView("shop")}
-          onProceedToPayment={() => setCurrentView("payment")}
+          setCurrentView={setCurrentView}
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
         />
       )}
 
-           {/* Payment page */}
+      {/* Payment page */}
       {currentView === "payment" && (
         <PaymentPage
           total={cartItems.reduce((sum, it) => sum + it.price * it.quantity, 0)}
@@ -496,7 +412,7 @@ export default function Home() {
           onComplete={() => setCurrentView("success")}
         />
       )}
-      
+
       {/* order sucess */}
       {currentView === "success" && (
         <OrderSuccessPage
