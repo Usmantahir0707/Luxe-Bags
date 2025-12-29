@@ -17,12 +17,12 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'tween' }}
-            className="fixed right-0 top-0 h-full w-full max-w-md z-50 bg-zinc-900 border-l border-zinc-800 shadow-2xl"
+            className="fixed right-0 top-0 h-full w-full max-w-md z-51 bg-(--base-2) border-l border-(--base-3) shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="text-white text-lg">Your Cart</h3>
-              <button onClick={onClose} className="p-2 rounded-full bg-zinc-800 text-zinc-300 hover:text-white"><X className="w-5 h-5" /></button>
+              <h3 className="text-(--text) text-lg">Your Cart</h3>
+              <button onClick={onClose} className="p-2 rounded-full bg-(--base-3) text-zinc-300 hover:text-(--text)"><X className="w-5 h-5" /></button>
             </div>
 
             <div className="p-4 overflow-y-auto max-h-[calc(100vh-220px)]">
@@ -36,16 +36,16 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-white text-sm">{it.name}</p>
+                            <p className="text-(--text) text-sm">{it.name}</p>
                             <p className="text-zinc-400 text-xs">Rs.{it.price.toFixed(2)}</p>
                           </div>
-                          <button onClick={() => onRemoveItem(it.id)} className="text-rose-500 text-sm">Remove</button>
+                          <button onClick={() => onRemoveItem(it.id)} className="text-(--main-1) text-sm">Remove</button>
                         </div>
 
                         <div className="mt-3 flex items-center gap-2">
-                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1))} className="px-2 py-1 rounded bg-zinc-800 text-white">-</button>
-                          <div className="px-3 py-1 rounded bg-zinc-800 text-sm text-white">{it.quantity}</div>
-                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1)} className="px-2 py-1 rounded bg-zinc-800 text-white">+</button>
+                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1))} className="px-2 py-1 rounded bg-(--base-3) text-(--text)">-</button>
+                          <div className="px-3 py-1 rounded bg-(--base-3) text-sm text-(--text)">{it.quantity}</div>
+                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1)} className="px-2 py-1 rounded bg-(--base-3) text-(--text)">+</button>
                         </div>
                       </div>
                     </li>
@@ -54,12 +54,12 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
               )}
             </div>
 
-            <div className="p-4 border-t border-zinc-800">
+            <div className="p-4 border-t border-(--base-3)">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-zinc-400">Subtotal</span>
-                <span className="font-semibold text-white">Rs.{total.toFixed(2)}</span>
+                <span className="font-semibold text-(--text)">Rs.{total.toFixed(2)}</span>
               </div>
-              <button onClick={onCheckout} className="w-full py-3 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white font-semibold">Checkout</button>
+              <button onClick={onCheckout} className="w-full py-3 rounded-full bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold">Checkout</button>
             </div>
           </motion.aside>
         </>

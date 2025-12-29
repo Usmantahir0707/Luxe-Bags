@@ -91,7 +91,7 @@ export default function PhoneInput({ value, setValue, inputStyle, border, listHe
         onClick={() => setShowCountries((p) => !p)}
         className="flex items-center cursor-pointer relative h-full"
       >
-        <span className="text-[8px] text-gray-600">▼</span>
+        <span className="text-[8px] text-(--text-4)">▼</span>
         <ul className="ml-1 min-w-[20px]">
           <li>
             {loading ? (

@@ -63,15 +63,15 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
     `p-3 bg-zinc-950 border rounded w-full ${err ? "border-red-500" : "border-zinc-800"}`;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-(--base-1) text-(--text)">
       <div className="max-w-4xl mx-auto p-6">
-        <button onClick={onBack} className="text-rose-500 mb-4">
+        <button onClick={onBack} className="text-(--main-1) mb-4">
           ← Back to shop
         </button>
         <h1 className="text-2xl font-semibold mb-6">Checkout</h1>
 
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 bg-zinc-900 p-6 rounded-xl border border-zinc-800">
+          <div className="md:col-span-2 bg-(--base-2) p-6 rounded-xl border border-(--base-3)">
             <h2 className="text-lg mb-4">Billing details</h2>
 
             <form autoComplete="off" className="space-y-4">
@@ -88,7 +88,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
                     placeholder="Full name"
                   />
                   {formError.customerName && (
-                    <p className="text-red-500 text-xs mt-1">{formError.customerName}</p>
+                    <p className="text-(--main-1) text-xs mt-1">{formError.customerName}</p>
                   )}
                 </div>
 
@@ -104,7 +104,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
                     placeholder="Email"
                   />
                   {formError.customerEmail && (
-                    <p className="text-red-500 text-xs mt-1">{formError.customerEmail}</p>
+                    <p className="text-(--main-1) text-xs mt-1">{formError.customerEmail}</p>
                   )}
                 </div>
 
@@ -120,7 +120,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
                     border={formError.customerPhone ? "border border-red-500" : "border border-zinc-800"}
                   />
                   {formError.customerPhone && (
-                    <p className="text-red-500 text-xs mt-1">{formError.customerPhone}</p>
+                    <p className="text-(--main-1) text-xs mt-1">{formError.customerPhone}</p>
                   )}
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
                   placeholder="Address"
                 />
                 {formError.address && (
-                  <p className="text-red-500 text-xs mt-1">{formError.address}</p>
+                  <p className="text-(--main-1) text-xs mt-1">{formError.address}</p>
                 )}
               </div>
 
@@ -160,7 +160,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
                     placeholder="City"
                   />
                   {formError.city && (
-                    <p className="text-red-500 text-xs mt-1">{formError.city}</p>
+                    <p className="text-(--main-1) text-xs mt-1">{formError.city}</p>
                   )}
                 </div>
 
@@ -179,14 +179,14 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
                     placeholder="Postal code"
                   />
                   {formError.postalCode && (
-                    <p className="text-red-500 text-xs mt-1">{formError.postalCode}</p>
+                    <p className="text-(--main-1) text-xs mt-1">{formError.postalCode}</p>
                   )}
                 </div>
               </div>
             </form>
           </div>
 
-          <aside className="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
+          <aside className="bg-(--base-2) p-6 rounded-xl border border-(--base-3)">
             <h3 className="text-lg mb-4">Your order</h3>
 
             <ul className="space-y-3 mb-4">
@@ -205,12 +205,12 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
 
             <div className="flex items-center justify-between text-zinc-400 mb-4">
               <span>Subtotal</span>
-              <strong className="text-white">Rs.{total.toFixed(2)}</strong>
+              <strong className="text-(--text)">Rs.{total.toFixed(2)}</strong>
             </div>
 
             <button
               onClick={handleProceed}
-              className="w-full py-3 rounded-full bg-linear-to-r from-rose-500 to-pink-600 text-white"
+              className="w-full py-3 rounded-full bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text)"
             >
               Proceed to payment
             </button>
