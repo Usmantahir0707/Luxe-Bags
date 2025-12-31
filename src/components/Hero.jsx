@@ -1,32 +1,32 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Star, Award, Users, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import video1 from "../assets/PixVerse_V5.5_Image_Text_360P_i_need_a_branded.mp4";
-import video2 from "../assets/PixVerse_V5.5_Image_Text_360P_i_need_a_branded (1).mp4";
+import leftCelebration from "../assets/left celebration.png";
+import rightCelebration from "../assets/right celebration.png";
 
 export default function Hero() {
   const navigate = useNavigate();
 
-  // Scroll-based animations for video elements
+  // Scroll-based animations for image elements
  const { scrollYProgress } = useScroll();
 
 const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -2000]);
 const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 2000]);
 const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 250]);
 
-const leftVideoX = useSpring(leftXRaw, {
+const leftImageX = useSpring(leftXRaw, {
   stiffness: 60,
   damping: 20,
   mass: 1,
 });
 
-const rightVideoX = useSpring(rightXRaw, {
+const rightImageX = useSpring(rightXRaw, {
   stiffness: 60,
   damping: 20,
   mass: 1,
 });
 
-const rightVideoY = useSpring(rightYRaw, {
+const rightImageY = useSpring(rightYRaw, {
   stiffness: 70,
   damping: 20,
   mass: 1,
@@ -49,30 +49,26 @@ const rightVideoY = useSpring(rightYRaw, {
         }} />
       </div>
 
-      {/* Floating Video Elements with Scroll Animation */}
+      {/* Floating Image Elements with Scroll Animation */}
       <motion.div
-        style={{ x: leftVideoX }}
-        className="absolute h-full top-0 left-0 sm:left-0 lg:left-0 z-5"
+        style={{ x: leftImageX }}
+        className="absolute h-full top-0 -left-30 sm:left-0 lg:left-0 z-5"
       >
-        <video
-          src={video1}
-          autoPlay
-          muted
-          loop
-          className="w-full h-full sm:w-40 sm:h-20 lg:w-70 lg:h-full  shadow-xl border border-white/20 object-cover glow-video"
+        <img
+          src={leftCelebration}
+          alt="Left Celebration"
+          className="w-full h-full sm:w-40 sm:h-full lg:w-70 lg:h-full border-white/20 object-cover"
         />
       </motion.div>
 
       <motion.div
-        style={{ y: rightVideoY, x: rightVideoX }}
-        className="absolute h-full top-0 right-0 sm:right-16 lg:right-0 z-5"
+        style={{ y: rightImageY, x: rightImageX }}
+        className="absolute h-full top-0 -right-15 sm:right-0 lg:right-0 z-5"
       >
-        <video
-          src={video2}
-          autoPlay
-          muted
-          loop
-          className="w-36 h-full sm:w-44 sm:h-54 lg:w-70 lg:h-full shadow-xl border border-white/20 object-cover glow-video"
+        <img
+          src={rightCelebration}
+          alt="Right Celebration"
+          className="w-36 h-full sm:w-44 sm:h-full lg:w-70 lg:h-full object-cover"
         />
       </motion.div>
 
@@ -99,7 +95,7 @@ const rightVideoY = useSpring(rightYRaw, {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-bold font-['Playfair_Display'] mb-6 leading-tight"
+          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight"
         >
           <span className="text-(--text)">
             New Year 2026

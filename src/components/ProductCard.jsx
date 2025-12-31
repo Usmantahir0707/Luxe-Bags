@@ -34,7 +34,7 @@ const ProductCard = memo(forwardRef(function ProductCard(
       tabIndex={0}
       onKeyDown={(e) => (e.key === 'Enter' ? onQuickView(id) : null)}
     >
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-(--base-2) to-(--base-3)/30 aspect-[4/5] shadow-xl border border-(--base-3)/20">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-(--base-2) to-(--base-3)/30 aspect-square shadow-xl border border-(--base-3)/20">
         {/* Background decorative elements */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-(--main-1)/10 to-transparent rounded-full -translate-y-16 translate-x-16" />
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-(--main-2)/8 to-transparent rounded-full translate-y-12 -translate-x-12" />

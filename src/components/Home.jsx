@@ -57,6 +57,7 @@ export default function Home() {
         const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products`);
         const data = await res.json();
         setProducts(data.data);
+        console.log(data.data)
       } catch (err) {
         console.log(err);
       }
@@ -221,9 +222,9 @@ export default function Home() {
                 Discover our handpicked selection of premium bags.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
                 <AnimatePresence>
-                  {products.slice(0, 6).map((product) => (
+                  {products.filter(product => product.isFeatured).slice(0, 6).map((product) => (
                     <ProductCard
                       key={product._id}
                       id={product._id}
@@ -263,7 +264,7 @@ export default function Home() {
                 Explore our complete collection of bags.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
                 <AnimatePresence>
                   {products.slice(0, 6).map((product) => (
                     <ProductCard

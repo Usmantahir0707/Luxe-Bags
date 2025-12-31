@@ -193,14 +193,11 @@ export default function Footer() {
                 'Privacy Policy',
                 'Terms & Conditions',
                 'Refund & Cancellation Policy',
-                'Cookie Policy',
                 'Customer Service',
                 'Contact Us',
                 'Shipping & Returns',
-                'Size Guide',
                 'Track Order',
-                'FAQs',
-                'Care Instructions'
+                'FAQs'
               ].map((link) => (
                 <li key={link}>
                   <motion.button

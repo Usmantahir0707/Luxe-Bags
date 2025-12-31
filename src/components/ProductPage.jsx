@@ -1,14 +1,15 @@
 // src/components/ProductPage.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Heart, ShoppingBag, Star, Search, X, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Heart, ShoppingBag, Star, Search, X, RotateCcw, Ruler, Shirt } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import LoginModal from './LoginModal';
 import CartDrawer from './CartDrawer';
 import { useShopContext } from '../context/ShopContext';
 import { toast } from 'sonner';
+import { modalContents } from './modalContents';
 
 export default function ProductPage() {
   const location = useLocation();
@@ -28,9 +29,26 @@ export default function ProductPage() {
   const [showStickyAddToCart, setShowStickyAddToCart] = useState(false);
   const [magnifierPosition, setMagnifierPosition] = useState({ x: 0, y: 0 });
   const [isMagnifierVisible, setIsMagnifierVisible] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: '', content: '' });
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
   const totalItems = cartItems.reduce((s, i) => s + i.quantity, 0);
+
+  const openModal = (linkText) => {
+    setModalContent(modalContents[linkText] || { title: linkText, content: '<p>Content coming soon...</p>' });
+    setModalOpen(true);
+    previousFocusRef.current = document.activeElement;
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+    }
+  };
 
   const handleSearch = () => {
     setSearching(false);
@@ -59,6 +77,39 @@ export default function ProductPage() {
       document.body.style.overflow = 'unset';
     };
   }, [searching]);
+
+  // Handle escape key and focus trap for modal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && modalOpen) {
+        closeModal();
+      }
+    };
+
+    if (modalOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [modalOpen]);
+
+  // Focus trap for modal
+  useEffect(() => {
+    if (modalOpen && modalRef.current) {
+      const focusableElements = modalRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+
+      firstElement?.focus();
+    }
+  }, [modalOpen]);
 
   // Sticky Add to Cart Button Logic
   useEffect(() => {
@@ -101,204 +152,204 @@ export default function ProductPage() {
   };
 
   if (!product) {
-  return (
-    <div className="min-h-screen bg-(--base-1)">
-      <AnimatePresence>
-        {searching && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setSearching(false)}
-            className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm"
-          >
-            <div className="max-w-2xl mx-auto pt-20 px-4">
-              {/* search input container */}
-              <motion.div
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                className="flex w-full px-3 py-3 rounded-xl bg-white shadow-2xl border border-gray-200 justify-between items-center mb-4"
-              >
-                <div className="flex items-center flex-1">
-                  <Search className="text-(--text-2) w-5 h-5 mr-3" />
-                  <input
-                    type="text"
-                    placeholder="Search bags..."
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
-                    className="flex-1 text-(--text-6) placeholder-(--text-3) outline-none focus:outline-none focus:ring-0 text-lg"
-                    autoFocus
-                  />
-                </div>
-                {searchValue && (
-                  <motion.button
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setSearchValue("")}
-                    className="ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
-                  >
-                    <RotateCcw className="w-4 h-4 text-gray-500" />
-                  </motion.button>
-                )}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setSearching(false)}
-                  className="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
+    return (
+      <div className="min-h-screen bg-(--base-1)">
+        <AnimatePresence>
+          {searching && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSearching(false)}
+              className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm"
+            >
+              <div className="max-w-2xl mx-auto pt-20 px-4">
+                {/* search input container */}
+                <motion.div
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="flex w-full px-3 py-3 rounded-xl bg-white shadow-2xl border border-gray-200 justify-between items-center mb-4"
                 >
-                  <X className="w-5 h-5 text-gray-500" />
-                </motion.button>
-              </motion.div>
-
-              {/* Most Searched or Suggestions */}
-              <AnimatePresence mode="wait">
-                {searchValue === "" ? (
-                  <motion.div
-                    key="most-searched"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="bg-white rounded-xl shadow-2xl p-6"
+                  <div className="flex items-center flex-1">
+                    <Search className="text-(--text-2) w-5 h-5 mr-3" />
+                    <input
+                      type="text"
+                      placeholder="Search bags..."
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+                      className="flex-1 text-(--text-6) placeholder-(--text-3) outline-none focus:outline-none focus:ring-0 text-lg"
+                      autoFocus
+                    />
+                  </div>
+                  {searchValue && (
+                    <motion.button
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setSearchValue("")}
+                      className="ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                    >
+                      <RotateCcw className="w-4 h-4 text-gray-500" />
+                    </motion.button>
+                  )}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSearching(false)}
+                    className="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
                   >
-                    <h3 className="text-lg font-semibold text-(--text-6) mb-4">Most Searched</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {mostSearched.map((item, index) => (
-                        <motion.button
-                          key={item}
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.2, delay: index * 0.05 }}
-                          whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => { setSearchValue(item); handleSearch(); }}
-                          className="p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
-                        >
-                          {item}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                ) : suggestions.length > 0 ? (
-                  <motion.div
-                    key="suggestions"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                    className="bg-white rounded-xl shadow-2xl p-6"
-                  >
-                    <h3 className="text-lg font-semibold text-(--text-6) mb-4">Suggestions</h3>
-                    <div className="space-y-2">
-                      {suggestions.map((item, index) => (
-                        <motion.button
-                          key={item}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.2, delay: index * 0.05 }}
-                          whileHover={{ x: 4, backgroundColor: "#f3f4f6" }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => { setSearchValue(item); handleSearch(); }}
-                          className="w-full p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
-                        >
-                          {item}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    <X className="w-5 h-5 text-gray-500" />
+                  </motion.button>
+                </motion.div>
 
-      <Header
-        user={user}
-        setUser={setUser}
-        totalItems={totalItems}
-        showAccountMenu={showAccountMenu}
-        setShowAccountMenu={setShowAccountMenu}
-        setIsLoginModalOpen={setIsLoginModalOpen}
-        setIsCartOpen={setIsCartOpen}
-        setSearching={setSearching}
-      />
+                {/* Most Searched or Suggestions */}
+                <AnimatePresence mode="wait">
+                  {searchValue === "" ? (
+                    <motion.div
+                      key="most-searched"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, delay: 0.2 }}
+                      className="bg-white rounded-xl shadow-2xl p-6"
+                    >
+                      <h3 className="text-lg font-semibold text-(--text-6) mb-4">Most Searched</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        {mostSearched.map((item, index) => (
+                          <motion.button
+                            key={item}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.2, delay: index * 0.05 }}
+                            whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => { setSearchValue(item); handleSearch(); }}
+                            className="p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
+                          >
+                            {item}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ) : suggestions.length > 0 ? (
+                    <motion.div
+                      key="suggestions"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                      className="bg-white rounded-xl shadow-2xl p-6"
+                    >
+                      <h3 className="text-lg font-semibold text-(--text-6) mb-4">Suggestions</h3>
+                      <div className="space-y-2">
+                        {suggestions.map((item, index) => (
+                          <motion.button
+                            key={item}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.2, delay: index * 0.05 }}
+                            whileHover={{ x: 4, backgroundColor: "#f3f4f6" }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => { setSearchValue(item); handleSearch(); }}
+                            className="w-full p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
+                          >
+                            {item}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Header
+          user={user}
+          setUser={setUser}
+          totalItems={totalItems}
+          showAccountMenu={showAccountMenu}
+          setShowAccountMenu={setShowAccountMenu}
+          setIsLoginModalOpen={setIsLoginModalOpen}
+          setIsCartOpen={setIsCartOpen}
+          setSearching={setSearching}
+        />
         <div className="flex items-center justify-center min-h-[60vh]">
           <p className="text-(--text)">Product not found</p>
         </div>
-      <Footer />
+        <Footer />
 
-      {/* Login Modal */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onLoginSuccess={(userData) => {
-          setUser(userData);
-          setIsLoginModalOpen(false);
-          toast.success("Welcome back!", {
-            description: `Logged in as ${userData.name}`,
-          });
-        }}
-      />
+        {/* Login Modal */}
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onLoginSuccess={(userData) => {
+            setUser(userData);
+            setIsLoginModalOpen(false);
+            toast.success("Welcome back!", {
+              description: `Logged in as ${userData.name}`,
+            });
+          }}
+        />
 
-      {/* Cart Drawer */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cartItems}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
-        onCheckout={() => {
-          setIsCartOpen(false);
-          // Navigate to checkout or something
-        }}
-      />
+        {/* Cart Drawer */}
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+          items={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          onCheckout={() => {
+            setIsCartOpen(false);
+            // Navigate to checkout or something
+          }}
+        />
 
-      {/* Sticky Add to Cart Button */}
-      <AnimatePresence>
-        {showStickyAddToCart && (
-          <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-(--base-2)/95 backdrop-blur-md border-t border-(--base-3)/50 shadow-2xl"
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-(--text) font-semibold text-lg truncate">{product.name}</h3>
-                  <p className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-(--main-1) to-(--main-2)">
-                    Rs.{Number(product.price).toFixed(2)}
-                  </p>
+        {/* Sticky Add to Cart Button */}
+        <AnimatePresence>
+          {showStickyAddToCart && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="fixed bottom-0 left-0 right-0 z-50 bg-(--base-2)/95 backdrop-blur-md border-t border-(--base-3)/50 shadow-2xl"
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-(--text) font-semibold text-lg truncate">{product.name}</h3>
+                    <p className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-(--main-1) to-(--main-2)">
+                      Rs.{Number(product.price).toFixed(2)}
+                    </p>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleAddToCart}
+                    className="flex-shrink-0 px-8 py-3 bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                    Add to Cart
+                  </motion.button>
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleAddToCart}
-                  className="flex-shrink-0 px-8 py-3 bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-                >
-                  <ShoppingBag className="w-5 h-5" />
-                  Add to Cart
-                </motion.button>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   const handleAddToCart = () => {
     setCartItems((prev) => {
@@ -608,6 +659,31 @@ export default function ProductPage() {
                 <li>• Gold-tone hardware</li>
               </ul>
             </div>
+
+            {/* Size Guide and Care Instructions */}
+            <div className="mb-8">
+              <div className="flex gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => openModal('Size Guide')}
+                  className="flex items-center gap-2 px-4 py-2 bg-(--base-2) border border-(--base-3) rounded-lg text-(--text) hover:bg-(--base-3) transition-colors"
+                >
+                  <Ruler className="w-4 h-4" />
+                  Size Guide
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => openModal('Care Instructions')}
+                  className="flex items-center gap-2 px-4 py-2 bg-(--base-2) border border-(--base-3) rounded-lg text-(--text) hover:bg-(--base-3) transition-colors"
+                >
+                  <Shirt className="w-4 h-4" />
+                  Care Instructions
+                </motion.button>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -729,6 +805,49 @@ export default function ProductPage() {
           // Navigate to checkout or something
         }}
       />
+
+      {/* Modal */}
+      {modalOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          onClick={closeModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          <motion.div
+            ref={modalRef}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-(--base-1) border border-(--base-3) rounded-lg shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-(--base-3)">
+              <h2 id="modal-title" className="text-xl font-semibold text-(--text)">
+                {modalContent.title}
+              </h2>
+              <button
+                onClick={closeModal}
+                className="p-2 rounded-full hover:bg-(--base-2) transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5 text-(--text)" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 prose prose-sm max-w-none text-(--text)">
+              <div dangerouslySetInnerHTML={{ __html: modalContent.content }} />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
