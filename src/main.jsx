@@ -106,10 +106,10 @@ const route = createBrowserRouter([
         )
       },
       {
-        path:'//verify-email',
+        path:'*',
         element: (
           <Suspense fallback={<LoadingSpinner />}>
-            <VerifyEmail/>
+            {window.location.pathname.startsWith('//verify-email') ? <VerifyEmail /> : <div>404 - Page Not Found</div>}
           </Suspense>
         )
       },
