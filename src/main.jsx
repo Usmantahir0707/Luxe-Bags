@@ -105,6 +105,14 @@ const route = createBrowserRouter([
           </Suspense>
         )
       },
+      {
+        path:'//verify-email',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <VerifyEmail/>
+          </Suspense>
+        )
+      },
     ]
   }
 ])
