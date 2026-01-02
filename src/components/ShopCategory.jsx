@@ -1,10 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Filter, SlidersHorizontal, ChevronDown, X } from "lucide-react";
+import { toast } from "sonner";
 import ProductCard from "./ProductCard";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useShopContext } from "../context/ShopContext";
 
 const categories = [
   "All",
@@ -19,6 +21,9 @@ const categories = [
 export default function ShopCategory() {
   const { category } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { addToCart } = useShopContext();
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSubCategory, setSelectedSubCategory] = useState("All");
@@ -27,6 +32,9 @@ export default function ShopCategory() {
   const [showFilters, setShowFilters] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(true);
+
+  // Get search query from location state or URL params
+  const searchQuery = location.state?.query || new URLSearchParams(location.search).get('search') || '';
 
   // Capitalize category name for display
   const displayCategory = category === 'featured' ? 'Featured Collection' : category.charAt(0).toUpperCase() + category.slice(1);
@@ -54,21 +62,34 @@ export default function ShopCategory() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Getting product data
+  // Getting product data with search and filters
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products`);
+        const params = {};
+
+        // Add search query if exists
+        if (searchQuery) {
+          params.search = searchQuery;
+        }
+
+        // Add category filter
+        if (category && category !== 'all' && category !== 'featured') {
+          params.category = category;
+        }
+
+        const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products?${new URLSearchParams(params)}`);
         const data = await res.json();
-        setProducts(data.data);
+        setProducts(data.data || data);
       } catch (err) {
         console.log(err);
+        toast.error("Failed to load products");
       } finally {
         setLoading(false);
       }
     };
     getProducts();
-  }, []);
+  }, [category, searchQuery]);
 
   // Filter products by category and other filters
   const filteredProducts = useMemo(() => {
@@ -112,8 +133,7 @@ export default function ShopCategory() {
     const product = products.find((p) => p._id === productId);
     if (!product) return;
 
-    // This would typically use the cart context
-    console.log("Adding to cart:", product.name);
+    addToCart(product);
   };
 
   if (loading) {

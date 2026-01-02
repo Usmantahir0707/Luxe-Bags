@@ -13,6 +13,9 @@ const Contact = lazy(() => import('./components/Contact.jsx'))
 const ShopCategory = lazy(() => import('./components/ShopCategory.jsx'))
 const SearchResults = lazy(() => import('./components/SearchResults.jsx'))
 const ProductPage = lazy(() => import('./components/ProductPage.jsx'))
+const UserProfile = lazy(() => import('./components/UserProfile.jsx'))
+const OrderHistory = lazy(() => import('./components/OrderHistory.jsx'))
+const VerifyEmail = lazy(() => import('./components/VerifyEmail.jsx'))
 
 // Loading component
 const LoadingSpinner = () => (
@@ -75,6 +78,30 @@ const route = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <ProductPage/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/profile',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <UserProfile/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/orders',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <OrderHistory/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/verify-email',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <VerifyEmail/>
           </Suspense>
         )
       },

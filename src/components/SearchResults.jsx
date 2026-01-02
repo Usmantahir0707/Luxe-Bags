@@ -11,8 +11,11 @@ import {
   X,
   ChevronDown,
 } from "lucide-react";
+import { toast } from "sonner";
 import ProductCard from "./ProductCard";
 import Header from "./Header";
+import { productsAPI } from "../services/api";
+import { useShopContext } from "../context/ShopContext";
 
 // Dummy bag data
 const dummyBags = [
@@ -86,7 +89,11 @@ const categories = [
 export default function SearchResults() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { addToCart } = useShopContext();
   const searchQuery = location.state?.query || "";
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [sortBy, setSortBy] = useState("relevance");
@@ -106,16 +113,41 @@ export default function SearchResults() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Filter and sort products
-  const filteredProducts = dummyBags.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    const matchesPrice =
-      product.price >= priceRange[0] && product.price <= priceRange[1];
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesPrice && matchesSearch;
+  // Fetch products based on search and filters
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const params = {};
+
+        // Add search query
+        if (searchQuery) {
+          params.search = searchQuery;
+        }
+
+        // Add category filter
+        if (selectedCategory !== "All") {
+          params.category = selectedCategory;
+        }
+
+        const data = await productsAPI.getAllProducts(params);
+        setProducts(data.data || data);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        toast.error('Failed to load products');
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [searchQuery, selectedCategory]);
+
+  // Filter and sort products (client-side for additional filters)
+  const filteredProducts = products.filter((product) => {
+    const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
+    return matchesPrice;
   });
 
   // Sort products
@@ -126,13 +158,26 @@ export default function SearchResults() {
       case "price-high":
         return b.price - a.price;
       case "rating":
-        return b.rating - a.rating;
+        return (b.rating || 0) - (a.rating || 0);
       case "name":
         return a.name.localeCompare(b.name);
       default:
         return 0;
     }
   });
+
+  const handleQuickView = (id) => {
+    const product = products.find((p) => p._id === id);
+    if (product) {
+      navigate('/product-page', { state: { product } });
+    }
+  };
+
+  const handleAddToCart = (productId) => {
+    const product = products.find((p) => p._id === productId);
+    if (!product) return;
+    addToCart(product);
+  };
 
   return (
     <div className="min-h-screen bg-(--base-1)">
@@ -352,7 +397,6 @@ export default function SearchResults() {
                     setSelectedCategory("All");
                     setPriceRange([0, 500]);
                     setSortBy("relevance");
-                    setSearchQuery("");
                   }}
                   className="w-full px-4 py-2 bg-(--main-1) text-(--text) rounded-lg hover:bg-(--main-2) transition-colors font-medium"
                 >
@@ -405,8 +449,8 @@ export default function SearchResults() {
                       price={product.price}
                       image={product.image}
                       category={product.category}
-                      onQuickView={() => {}}
-                      onAddToCart={() => {}}
+                      onQuickView={handleQuickView}
+                      onAddToCart={handleAddToCart}
                     />
                   </motion.div>
                 ))}
@@ -434,7 +478,6 @@ export default function SearchResults() {
                     setSelectedCategory("All");
                     setPriceRange([0, 500]);
                     setSortBy("relevance");
-                    setSearchQuery("");
                   }}
                   className="px-6 py-3 bg-(--main-1) text-(--text) rounded-lg hover:bg-(--main-2) transition-colors font-medium"
                 >

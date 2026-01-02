@@ -26,7 +26,7 @@ export default function Header({ showSearch = true }) {
   const setTheme = useThemeContext();
   const {
     user,
-    setUser,
+    logout,
     totalItems,
     showAccountMenu,
     setShowAccountMenu,
@@ -208,13 +208,18 @@ export default function Header({ showSearch = true }) {
                           <p className="text-(--text-4) text-sm">{user.email}</p>
                         </div>
                         <div className="py-2">
-                          <motion.button
-                            whileHover={{ x: 4 }}
-                            className="w-full px-4 py-2 text-left text-(--text-4) hover:text-(--text) hover:bg-(--base-2) flex items-center gap-2"
-                            role="menuitem"
+                          <Link
+                            to="/orders"
+                            onClick={() => setShowAccountMenu(false)}
                           >
-                            <Package className="w-4 h-4" /> My Orders
-                          </motion.button>
+                            <motion.div
+                              whileHover={{ x: 4 }}
+                              className="w-full px-4 py-2 text-left text-(--text-4) hover:text-(--text) hover:bg-(--base-2) flex items-center gap-2"
+                              role="menuitem"
+                            >
+                              <Package className="w-4 h-4" /> My Orders
+                            </motion.div>
+                          </Link>
                           <motion.button
                             whileHover={{ x: 4 }}
                             className="w-full px-4 py-2 text-left text-(--text-4) hover:text-(--text) hover:bg-(--base-2) flex items-center gap-2"
@@ -222,19 +227,24 @@ export default function Header({ showSearch = true }) {
                           >
                             <Heart className="w-4 h-4" /> Wishlist
                           </motion.button>
-                          <motion.button
-                            whileHover={{ x: 4 }}
-                            className="w-full px-4 py-2 text-left text-(--text-4) hover:text-(--text) hover:bg-(--base-2) flex items-center gap-2"
-                            role="menuitem"
+                          <Link
+                            to="/profile"
+                            onClick={() => setShowAccountMenu(false)}
                           >
-                            <User className="w-4 h-4" /> My Account
-                          </motion.button>
+                            <motion.div
+                              whileHover={{ x: 4 }}
+                              className="w-full px-4 py-2 text-left text-(--text-4) hover:text-(--text) hover:bg-(--base-2) flex items-center gap-2"
+                              role="menuitem"
+                            >
+                              <User className="w-4 h-4" /> My Account
+                            </motion.div>
+                          </Link>
                         </div>
                         <div className="border-t border-(--base-3)">
                           <motion.button
                             whileHover={{ x: 4 }}
                             onClick={() => {
-                              setUser(null);
+                              logout();
                               setShowAccountMenu(false);
                             }}
                             className="w-full px-4 py-3 text-left text-rose-500 hover:bg-(--base-2) flex items-center gap-2"

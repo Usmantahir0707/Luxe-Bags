@@ -1,6 +1,6 @@
 // src/components/ProductPage.jsx
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Heart, ShoppingBag, Star, Search, X, RotateCcw, Ruler, Shirt } from 'lucide-react';
 import Header from './Header';
@@ -8,16 +8,19 @@ import Footer from './Footer';
 import LoginModal from './LoginModal';
 import CartDrawer from './CartDrawer';
 import { useShopContext } from '../context/ShopContext';
+import { productsAPI } from '../services/api';
 import { toast } from 'sonner';
 import { modalContents } from './modalContents';
 
 export default function ProductPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems, setCartItems } = useShopContext();
-  const product = location.state?.product;
+  const { id } = useParams();
+  const { cartItems, setCartItems, addToCart } = useShopContext();
 
-  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || '');
+  const [product, setProduct] = useState(location.state?.product || null);
+  const [loading, setLoading] = useState(!product && !!id);
+  const [selectedColor, setSelectedColor] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -36,6 +39,29 @@ export default function ProductPage() {
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
   const totalItems = cartItems.reduce((s, i) => s + i.quantity, 0);
+
+  // Fetch product by ID if not passed via props
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!product && id) {
+        try {
+          const productData = await productsAPI.getProduct(id);
+          setProduct(productData);
+          setSelectedColor(productData.colors?.[0] || '');
+        } catch (error) {
+          console.error('Failed to fetch product:', error);
+          toast.error('Product not found');
+          navigate('/');
+        } finally {
+          setLoading(false);
+        }
+      } else if (product) {
+        setSelectedColor(product.colors?.[0] || '');
+      }
+    };
+
+    fetchProduct();
+  }, [id, product, navigate]);
 
   const openModal = (linkText) => {
     setModalContent(modalContents[linkText] || { title: linkText, content: '<p>Content coming soon...</p>' });
@@ -352,29 +378,7 @@ export default function ProductPage() {
   }
 
   const handleAddToCart = () => {
-    setCartItems((prev) => {
-      const existing = prev.find((i) => i.id === product._id);
-      if (existing) {
-        toast.success("Added to cart", {
-          description: `${product.name} quantity increased`,
-        });
-        return prev.map((i) =>
-          i.id === product._id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      toast.success("Added to cart", { description: product.name });
-      return [
-        ...prev,
-        {
-          id: product._id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          quantity: 1,
-          color: selectedColor,
-        },
-      ];
-    });
+    addToCart(product, 1, selectedColor);
   };
 
   const handleUpdateQuantity = (id, quantity) => {

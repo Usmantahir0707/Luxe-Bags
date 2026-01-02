@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Lock, User, Eye, EyeOff, LogIn } from 'lucide-react';
 import { useState } from 'react';
+import { useShopContext } from '../context/ShopContext';
+import { authAPI } from '../services/api';
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
+export default function LoginModal({ isOpen, onClose }) {
+  const { login, register, loginLoading, registerLoading } = useShopContext();
   const [mode, setMode] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,31 +15,35 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     rememberMe: false,
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      onLoginSuccess({
-        name: formData.name || formData.email.split('@')[0],
+    if (mode === 'login') {
+      await login({
         email: formData.email,
+        password: formData.password,
       });
-      onClose();
-      setFormData({ name: '', email: '', password: '', rememberMe: false });
-    }, 1500);
+    } else {
+      const result = await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      if (result.success) {
+        // Switch to login mode after successful registration
+        setMode('login');
+        setFormData(prev => ({ ...prev, name: '', password: '' }));
+      }
+    }
   };
 
   const handleSocialLogin = (provider) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      onLoginSuccess({
-        name: `User from ${provider}`,
-        email: `user@${provider.toLowerCase()}.com`,
-      });
-      onClose();
-    }, 1000);
+    if (provider === '🅖') {
+      authAPI.googleLogin();
+    } else if (provider === '🅕') {
+      authAPI.facebookLogin();
+    }
+    // Apple login not implemented in backend yet
   };
 
   return (
@@ -198,10 +204,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    disabled={isLoading}
+                    disabled={mode === 'login' ? loginLoading : registerLoading}
                     className="w-full py-2 bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
                   >
-                    {isLoading ? (
+                    {(mode === 'login' ? loginLoading : registerLoading) ? (
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
