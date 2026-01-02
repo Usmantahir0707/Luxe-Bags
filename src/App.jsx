@@ -1,5 +1,5 @@
 import './App.css'
-import { Outlet, useNavigate, ScrollRestoration } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom'
 import { ShopContextProvider, useShopContext } from './context/ShopContext'
 import { ThemeProvider } from './context/ThemeContext'
 import LoginModal from './components/LoginModal'
@@ -11,6 +11,7 @@ import Lenis from 'lenis'
 
 function AppContent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     isLoginModalOpen,
     setIsLoginModalOpen,
@@ -27,6 +28,16 @@ function AppContent() {
     suggestions,
     setSuggestions
   } = useShopContext();
+
+  // Handle double-slash verification URLs
+  useEffect(() => {
+    if (location.pathname.startsWith('//verify-email')) {
+      const searchParams = new URLSearchParams(location.search);
+      const token = searchParams.get('token');
+      // Redirect to correct path with token
+      navigate(`/verify-email${token ? `?token=${token}` : ''}`, { replace: true });
+    }
+  }, [location.pathname, location.search, navigate]);
 
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
