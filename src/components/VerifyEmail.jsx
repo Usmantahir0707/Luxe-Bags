@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, Mail, Loader, ArrowRight } from 'lucide-react';
-import { authAPI } from '../services/api';
+import { authAPI, authUtils } from '../services/api';
+import { useShopContext } from '../context/ShopContext';
+import { toast } from 'sonner';
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user, setUser } = useShopContext();
   const [status, setStatus] = useState('loading'); // 'loading', 'success', 'error'
   const [message, setMessage] = useState('');
 
@@ -22,12 +25,28 @@ export default function VerifyEmail() {
 
       try {
         const response = await authAPI.verifyEmail(token);
-        setStatus('success');
-        setMessage('Your email has been successfully verified! You can now sign in to your account.');
 
-        // Redirect to login after 3 seconds
+        // Extract user and token from response
+        const { user: verifiedUser, token: authToken } = response;
+
+        // Store token and set user
+        if (authToken) {
+          authUtils.setToken(authToken);
+        }
+        if (verifiedUser) {
+          setUser(verifiedUser);
+        }
+
+        setStatus('success');
+        setMessage('Your email has been successfully verified! You are now logged in and ready to shop.');
+
+        toast.success('Welcome to Luxe Bags!', {
+          description: `Logged in as ${verifiedUser?.name || verifiedUser?.email}`,
+        });
+
+        // Redirect to home after 3 seconds
         setTimeout(() => {
-          navigate('/?verified=true');
+          navigate('/');
         }, 3000);
 
       } catch (error) {
@@ -44,11 +63,7 @@ export default function VerifyEmail() {
   }, [searchParams, navigate]);
 
   const handleContinue = () => {
-    if (status === 'success') {
-      navigate('/?verified=true');
-    } else {
-      navigate('/');
-    }
+    navigate('/');
   };
 
   return (
@@ -109,7 +124,7 @@ export default function VerifyEmail() {
         >
           {status === 'success' && (
             <>
-              Continue to Sign In
+              Start Shopping
               <ArrowRight className="w-4 h-4" />
             </>
           )}
