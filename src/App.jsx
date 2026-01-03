@@ -39,6 +39,16 @@ function AppContent() {
     }
   }, [location.pathname, location.search, navigate]);
 
+  // Handle double-slash reset-password URLs
+  useEffect(() => {
+    if (location.pathname.startsWith('//reset-password')) {
+      const searchParams = new URLSearchParams(location.search);
+      const token = searchParams.get('token');
+      // Redirect to correct path with token
+      navigate(`/reset-password${token ? `?token=${token}` : ''}`, { replace: true });
+    }
+  }, [location.pathname, location.search, navigate]);
+
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
   const handleSearch = () => {
