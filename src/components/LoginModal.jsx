@@ -196,6 +196,7 @@ export default function LoginModal({ isOpen, onClose }) {
                         <span className="text-zinc-400">Remember me</span>
                       </label>
                       <motion.button
+                        type="button"
                         whileHover={{ x: 1 }}
                         onClick={() => {
                           setIsLoginModalOpen(false);
