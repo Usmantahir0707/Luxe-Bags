@@ -3,11 +3,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, CheckCircle, XCircle, Loader, ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { authAPI } from '../services/api';
+import { useShopContext } from '../context/ShopContext';
 import { toast } from 'sonner';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { login } = useShopContext();
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
@@ -24,23 +26,6 @@ export default function ResetPassword() {
     if (!resetToken) {
       setStatus('invalid-token');
       setMessage('No reset token found in the URL. Please use the link from your email.');
-      return;
-    }
-
-    // Handle development vs production URL mismatch
-    // If we're on localhost but the URL structure suggests production link
-    const currentHostname = window.location.hostname;
-    const isLocalhost = currentHostname === 'localhost' || currentHostname === '127.0.0.1';
-
-    // If on localhost and this looks like a production reset link, show dev message
-    if (isLocalhost && window.location.pathname === '/reset-password') {
-      setStatus('dev-mode');
-      setMessage(
-        `Development Mode: You're on localhost but the reset link points to production. ` +
-        `To test locally, update your backend FRONTEND_URL to http://localhost:5174, ` +
-        `or use this token directly: ${resetToken}`
-      );
-      setToken(resetToken);
       return;
     }
 
@@ -76,12 +61,34 @@ export default function ResetPassword() {
     setMessage('');
 
     try {
-      await authAPI.resetPassword(token, password.trim());
+      const resetResponse = await authAPI.resetPassword(token, password.trim());
+      console.log('Reset password response:', resetResponse);
+
       setStatus('success');
       setMessage('Your password has been successfully reset! You can now log in with your new password.');
       toast.success('Password reset successful!', {
         description: 'You can now log in with your new password',
       });
+
+      // Try to auto-login if user data is returned
+      if (resetResponse && resetResponse.user) {
+        try {
+          console.log('Attempting auto-login with returned user data');
+          const loginResult = await login({
+            email: resetResponse.user.email,
+            password: password.trim()
+          });
+          if (loginResult.success) {
+            toast.success('Auto-logged in!', {
+              description: `Welcome back, ${resetResponse.user.name || resetResponse.user.email}!`,
+            });
+          }
+        } catch (loginError) {
+          console.error('Auto-login failed:', loginError);
+          // Auto-login failed, but password reset was successful
+          // User will need to login manually
+        }
+      }
 
       // Redirect to home after 3 seconds
       setTimeout(() => {

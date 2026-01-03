@@ -72,19 +72,27 @@ export function ShopContextProvider({ children }) {
   const login = async (credentials) => {
     setLoginLoading(true);
     try {
+      console.log('Login attempt with credentials:', { email: credentials.email, password: '***' });
       const response = await authAPI.login(credentials);
+      console.log('Login API response:', response);
+
       const { user, token } = response;
+
+      if (!user) {
+        throw new Error('Login response missing user data');
+      }
 
       authUtils.setToken(token);
       setUser(user);
       setIsLoginModalOpen(false);
 
       toast.success("Welcome back!", {
-        description: `Logged in as ${user.name}`,
+        description: `Logged in as ${user.name || user.email}`,
       });
 
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
+      console.error('Login failed:', error);
       toast.error("Login failed", {
         description: error.message || "Please check your credentials",
       });
