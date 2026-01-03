@@ -84,8 +84,19 @@ export const authAPI = {
 
   // Facebook OAuth (redirect handled by backend)
   facebookLogin: () => window.location.href = `${BASE_URL}/api/auth/facebook`,
-};
 
+  // Forgot Password
+  forgotPassword: (email) => apiCall('/api/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  }),
+
+  // Reset Password
+  resetPassword: (token, password) => apiCall('/api/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify({ token, password }),
+  }),
+};
 // Products API
 export const productsAPI = {
   // Get all products (with optional query params)

@@ -16,6 +16,8 @@ const ProductPage = lazy(() => import('./components/ProductPage.jsx'))
 const UserProfile = lazy(() => import('./components/UserProfile.jsx'))
 const OrderHistory = lazy(() => import('./components/OrderHistory.jsx'))
 const VerifyEmail = lazy(() => import('./components/VerifyEmail.jsx'))
+const ForgotPassword = lazy(() => import('./components/ForgotPassword.jsx'))
+const ResetPassword = lazy(() => import('./components/ResetPassword.jsx'))
 
 // Loading component
 const LoadingSpinner = () => (
@@ -102,6 +104,22 @@ const route = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <VerifyEmail/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/forgot-password',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ForgotPassword/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/reset-password',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ResetPassword/>
           </Suspense>
         )
       },

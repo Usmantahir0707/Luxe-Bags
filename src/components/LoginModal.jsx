@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Lock, User, Eye, EyeOff, LogIn } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useShopContext } from '../context/ShopContext';
 import { authAPI } from '../services/api';
 
 export default function LoginModal({ isOpen, onClose }) {
-  const { login, register, loginLoading, registerLoading } = useShopContext();
+  const navigate = useNavigate();
+  const { login, register, loginLoading, registerLoading, setIsLoginModalOpen } = useShopContext();
   const [mode, setMode] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -193,9 +195,16 @@ export default function LoginModal({ isOpen, onClose }) {
                         />
                         <span className="text-zinc-400">Remember me</span>
                       </label>
-                      <motion.a whileHover={{ x: 1 }} href="#" className="text-(--main-1) hover:text-rose-400">
+                      <motion.button
+                        whileHover={{ x: 1 }}
+                        onClick={() => {
+                          setIsLoginModalOpen(false);
+                          navigate('/forgot-password');
+                        }}
+                        className="text-(--main-1) hover:text-rose-400 bg-transparent border-none cursor-pointer"
+                      >
                         Forgot?
-                      </motion.a>
+                      </motion.button>
                     </div>
                   )}
 
