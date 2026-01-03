@@ -70,26 +70,6 @@ export default function ResetPassword() {
         description: 'You can now log in with your new password',
       });
 
-      // Try to auto-login if user data is returned
-      if (resetResponse && resetResponse.user) {
-        try {
-          console.log('Attempting auto-login with returned user data');
-          const loginResult = await login({
-            email: resetResponse.user.email,
-            password: password.trim()
-          });
-          if (loginResult.success) {
-            toast.success('Auto-logged in!', {
-              description: `Welcome back, ${resetResponse.user.name || resetResponse.user.email}!`,
-            });
-          }
-        } catch (loginError) {
-          console.error('Auto-login failed:', loginError);
-          // Auto-login failed, but password reset was successful
-          // User will need to login manually
-        }
-      }
-
       // Redirect to home after 3 seconds
       setTimeout(() => {
         navigate('/');

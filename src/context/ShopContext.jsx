@@ -76,10 +76,10 @@ export function ShopContextProvider({ children }) {
       const response = await authAPI.login(credentials);
       console.log('Login API response:', response);
 
-      const { user, token } = response;
+      const { token, ...user } = response;
 
-      if (!user) {
-        throw new Error('Login response missing user data');
+      if (!user || !token) {
+        throw new Error('Login response missing user data or token');
       }
 
       authUtils.setToken(token);
