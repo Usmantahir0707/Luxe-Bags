@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import LoginModal from './components/LoginModal'
 import CartDrawer from './components/CartDrawer'
 import Searching from './components/Searching'
+import Toaster from './components/ui/Toaster'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import Lenis from 'lenis'
@@ -145,6 +146,8 @@ function AppContent() {
         setIsCartOpen(false);
       }}
     />
+
+    <Toaster />
     </>
   );
 }
