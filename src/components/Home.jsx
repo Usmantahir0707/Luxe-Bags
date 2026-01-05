@@ -1,161 +1,127 @@
 // src/components/Home.jsx
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  ShoppingBag,
-  Menu,
-  SlidersHorizontal,
-  User,
-  LogOut,
-  Package,
-  Heart,
-} from "lucide-react";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import ProductDetail from "./ProductDetail";
-import CartDrawer from "./CartDrawer";
-import CheckoutPage from "./CheckoutPage";
-import PaymentPage from "./PaymentPage";
-import OrderSuccessPage from "./OrderSuccessPage";
 import Footer from "./Footer";
-import LoginModal from "./LoginModal";
 import Toaster from "./ui/Toaster";
 import { toast } from "sonner";
+import { useShopContext } from "../context/ShopContext";
+import Hero from "./Hero";
+import Header from "./Header";
+import AnnouncementBar from "./AnnouncementBar";
 
-// --- Mock product data (kept from your original)
-// You can replace this with fetched data later.
-const products = [
-  {
-    id: 1,
-    name: "Classic Leather Handbag",
-    price: 299.99,
-    image:
-      "https://images.unsplash.com/photo-1591348278863-a8fb3887e2aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    category: "Handbag",
-    description:
-      "Elegant leather handbag with spacious interior and premium finishing. Perfect for everyday use or special occasions.",
-    colors: ["#1a1a1a", "#8B4513", "#D2691E"],
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Designer Shoulder Bag",
-    price: 349.99,
-    image:
-      "https://images.unsplash.com/photo-1760624294514-ca40aafe3d96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    category: "Shoulder",
-    description:
-      "Sophisticated shoulder bag with adjustable strap and multiple compartments for organized storage.",
-    colors: ["#000000", "#ffffff", "#FF69B4"],
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Luxury Tote Bag",
-    price: 279.99,
-    image:
-      "https://images.unsplash.com/photo-1624687943971-e86af76d57de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    category: "Tote",
-    description:
-      "Spacious tote bag made from premium leather, ideal for work or shopping with reinforced handles.",
-    colors: ["#8B4513", "#000000", "#696969"],
-    rating: 4,
-  },
-  {
-    id: 4,
-    name: "Crossbody Messenger",
-    price: 199.99,
-    image:
-      "https://images.unsplash.com/photo-1718622795525-2295971921ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    category: "Crossbody",
-    description:
-      "Compact crossbody bag with adjustable strap, perfect for hands-free convenience and style.",
-    colors: ["#000000", "#A52A2A", "#4B4B4B"],
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Evening Clutch",
-    price: 159.99,
-    image:
-      "https://images.unsplash.com/photo-1758817991388-54a98d456317?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    category: "Clutch",
-    description:
-      "Elegant clutch for evening events, featuring delicate details and a sophisticated silhouette.",
-    colors: ["#FFD700", "#C0C0C0", "#000000"],
-    rating: 5,
-  },
-  {
-    id: 6,
-    name: "Fashion Backpack",
-    price: 249.99,
-    image:
-      "https://images.unsplash.com/photo-1667411424594-403300e5cc35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    category: "Backpack",
-    description:
-      "Stylish backpack with multiple pockets and padded straps for ultimate comfort and functionality.",
-    colors: ["#000000", "#8B4513", "#4169E1"],
-    rating: 4,
-  },
-];
+// Debounce hook
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-const categories = [
-  "All",
-  "Handbag",
-  "Shoulder",
-  "Tote",
-  "Crossbody",
-  "Clutch",
-  "Backpack",
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+
+  return debouncedValue;
+}
+
+const shopCategories = [
+  { name: 'Handbags', href: '/shop/handbag', image: '/src/assets/b1.jpg' },
+  { name: 'Shoulder Bags', href: '/shop/shoulder', image: '/src/assets/b2.jpg' },
+  { name: 'Tote Bags', href: '/shop/tote', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg' },
+  { name: 'Crossbody Bags', href: '/shop/crossbody', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg' },
+  { name: 'Clutches', href: '/shop/clutch', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.46_6373b0af.jpg' },
+  { name: 'Backpacks', href: '/shop/backpack', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg' },
 ];
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const navigate = useNavigate();
+  const { cartItems, setCartItems, orderForm, setOrderForm } = useShopContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentView, setCurrentView] = useState("shop"); // shop | checkout | payment | success
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const productsPerPage = 12;
 
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
 
-  const handleAddToCart = (productId) => {
-    const product = products.find((p) => p.id === productId);
+
+  // Getting product data
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products`);
+        const data = await res.json();
+        setProducts(data.data);
+        console.log(data.data)
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getProducts();
+  }, []);
+
+  // Debounced search query
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  // Search n Filter logic - memoized
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(debouncedSearchQuery.toLowerCase());
+      return matchesSearch;
+    });
+  }, [products, debouncedSearchQuery]);
+
+  // Pagination logic - memoized
+  const paginationData = useMemo(() => {
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const currentProducts = filteredProducts.slice(startIndex, endIndex);
+    return { totalPages, startIndex, endIndex, currentProducts };
+  }, [filteredProducts, currentPage, productsPerPage]);
+
+  const { totalPages, currentProducts } = paginationData;
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // handle add to cart
+  const handleAddToCart = (productId, selectedColor) => {
+    const product = products.find((p) => {
+      return p._id === productId;
+    });
     if (!product) return;
     setCartItems((prev) => {
       const existing = prev.find((i) => i.id === productId);
       if (existing) {
-        toast.success("Added to cart", {
-          description: `${product.name} quantity increased`,
-        });
         return prev.map((i) =>
           i.id === productId ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      toast.success("Added to cart", { description: product.name });
       return [
         ...prev,
         {
-          id: product.id,
+          id: product._id,
           name: product.name,
           price: product.price,
           image: product.image,
           quantity: 1,
+          color: selectedColor ? selectedColor : product.colors[0],
         },
       ];
     });
   };
 
+  // handle update quantity
   const handleUpdateQuantity = (id, quantity) => {
     setCartItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity } : item))
@@ -163,237 +129,193 @@ export default function Home() {
   };
 
   const handleRemoveItem = (id) => {
-    const prod = products.find((p) => p.id === id);
-    if (prod) toast.info("Removed from cart", { description: prod.name });
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   const totalItems = cartItems.reduce((s, i) => s + i.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-(--base-1)">
       {currentView === "shop" && (
         <>
+          {/* Announcement Bar */}
+          <AnnouncementBar />
+
           {/* Header */}
-          <header className="sticky top-0 z-40 bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between h-16">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="lg:hidden text-white"
-                >
-                  <Menu className="w-6 h-6" />
-                </motion.button>
+          <Header />
 
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2"
-                >
-                  <ShoppingBag className="w-8 h-8 text-white" />
-                  <h1 className="text-white">Luxe Bags</h1>
-                </motion.div>
+          {/* Hero ======================================================================= */}
+          <Hero />
 
-                <div className="flex items-center gap-2">
+          {/* Categories Section */}
+          <section className="py-20 bg-(--base-1)">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+              {/* Heading */}
+              <h2 className="text-4xl font-semibold text-(--text) mb-4">
+                Shop By Categories
+              </h2>
+              <p className="text-(--text-4) mb-14">
+                Discover our range of products tailored to your needs.
+              </p>
+
+              {/* Categories */}
+              <motion.div 
+              
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10  items-center">
+
+                {shopCategories.map((category) => (
                   <motion.button
+                    initial={{scale: 0.8, y: 40}}
+                    whileInView={{scale: 1, y: 0}}
+                    transition={{duration: 0.7}}
+                    key={category.name}
+                    onClick={() => navigate(category.href)}
+                    className="group flex flex-col items-center focus:outline-none"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="hidden sm:block text-white"
                   >
-                    <Search className="w-5 h-5" />
-                  </motion.button>
+                    {/* Circle */}
+                    <div className="w-24 h-24 rounded-full bg-(--base-2) flex items-center justify-center
+                                    shadow-sm transition-all duration-300
+                                    group-hover:shadow-lg group-hover:scale-105">
 
-                  {user ? (
-                    <div className="relative">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setShowAccountMenu((v) => !v)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-full bg-linear-to-br from-rose-500 to-pink-600 text-white"
-                      >
-                        <User className="w-5 h-5" />
-                        <span className="hidden md:inline">{user.name}</span>
-                      </motion.button>
-
-                      <AnimatePresence>
-                        {showAccountMenu && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                            className="absolute right-0 mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden z-50"
-                          >
-                            <div className="p-4 border-b border-zinc-800">
-                              <p className="text-white">{user.name}</p>
-                              <p className="text-zinc-400 text-sm">
-                                {user.email}
-                              </p>
-                            </div>
-                            <div className="py-2">
-                              <motion.button
-                                whileHover={{ x: 4 }}
-                                className="w-full px-4 py-2 text-left text-zinc-300 hover:text-white hover:bg-zinc-800 flex items-center gap-2"
-                              >
-                                <Package className="w-4 h-4" /> My Orders
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ x: 4 }}
-                                className="w-full px-4 py-2 text-left text-zinc-300 hover:text-white hover:bg-zinc-800 flex items-center gap-2"
-                              >
-                                <Heart className="w-4 h-4" /> Wishlist
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ x: 4 }}
-                                className="w-full px-4 py-2 text-left text-zinc-300 hover:text-white hover:bg-zinc-800 flex items-center gap-2"
-                              >
-                                <User className="w-4 h-4" /> My Account
-                              </motion.button>
-                            </div>
-                            <div className="border-t border-zinc-800">
-                              <motion.button
-                                whileHover={{ x: 4 }}
-                                onClick={() => {
-                                  setUser(null);
-                                  setShowAccountMenu(false);
-                                }}
-                                className="w-full px-4 py-3 text-left text-rose-500 hover:bg-zinc-800 flex items-center gap-2"
-                              >
-                                <LogOut className="w-4 h-4" /> Sign Out
-                              </motion.button>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {/* Image */}
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover rounded-full"
+                      />
                     </div>
-                  ) : (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setIsLoginModalOpen(true)}
-                      className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-br from-rose-500 to-pink-600 text-white"
-                    >
-                      <User className="w-5 h-5" />
-                      <span>Login</span>
-                    </motion.button>
-                  )}
 
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsCartOpen(true)}
-                    className="relative p-2 text-white"
-                  >
-                    <ShoppingBag className="w-6 h-6" />
-                    {totalItems > 0 && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 w-5 h-5 bg-linear-to-br from-rose-500 to-pink-600 text-white rounded-full flex items-center justify-center text-xs font-bold"
-                      >
-                        {totalItems}
-                      </motion.span>
-                    )}
+                    {/* Label */}
+                    <span className="mt-4 text-sm font-medium text-(--text)">
+                      {category.name}
+                    </span>
                   </motion.button>
-                </div>
-              </div>
-            </div>
-          </header>
-
-          {/* Hero */}
-          <section className="relative overflow-hidden bg-linear-to-br from-zinc-900 via-zinc-950 to-black">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDE2djRoLTR2LTRoNHptLTQgMjB2NGgtNHYtNGg0em0tNCAwdi00SDI0djRoNHptLTQtNHYtNGgtNHY0aDR6bTgtOHYtNGgtNHY0aDR6bS00IDh2LTRoLTR2NGg0em04IDh2LTRoLTR2NGg0em0tOC04di00aC00djRoNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center"
-              >
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-white mb-4 text-3xl sm:text-4xl font-semibold"
-                >
-                  Discover Your Perfect Bag
-                </motion.h2>
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-zinc-400 max-w-2xl mx-auto mb-8"
-                >
-                  Explore our curated collection of premium handbags, designed
-                  to elevate your style and complement every occasion.
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="max-w-md mx-auto relative"
-                >
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                  <input
-                    type="text"
-                    placeholder="Search for bags..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 rounded-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50"
-                  />
-                </motion.div>
+                ))}
               </motion.div>
+
+              {/* View All */}
+              <div className="mt-16">
+                <motion.button
+                  onClick={() => navigate('/shop/all')}
+                  className="px-8 py-3 rounded-full bg-(--main-1) text-(--text) text-sm font-medium
+                             hover:bg-(--main-2) transition"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  View all
+                </motion.button>
+              </div>
+
             </div>
           </section>
 
-          {/* Category Filter */}
-          <section className="sticky top-16 z-30 bg-zinc-900/95 backdrop-blur-md border-b border-zinc-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-2 py-4 overflow-x-auto">
-                <SlidersHorizontal className="w-5 h-5 text-zinc-500 shrink-0" />
-                {categories.map((category) => (
-                  <motion.button
-                    key={category}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
-                      selectedCategory === category
-                        ? "bg-linear-to-r from-rose-500 to-pink-600 text-white"
-                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
-                    }`}
-                  >
-                    {category}
-                  </motion.button>
-                ))}
+          {/* Featured Bags Section */}
+          <section className="py-20 bg-(--base-1)">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2 className="text-4xl font-semibold text-(--text) mb-4">
+                Featured Bags
+              </h2>
+              <p className="text-(--text-4) mb-14">
+                Discover our handpicked selection of premium bags.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
+                <AnimatePresence>
+                  {products.filter(product => product.isFeatured).slice(0, 6).map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      id={product._id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
+                      category={product.category}
+                      onQuickView={(id) => {
+                        const p = products.find((x) => x._id === id);
+                        if (p) navigate('/product-page', { state: { product: p } });
+                      }}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
+
+              <motion.button
+                onClick={() => navigate('/shop/featured')}
+                className="px-8 py-3 rounded-full bg-(--main-1) text-(--text) text-sm font-medium
+                           hover:bg-(--main-2) transition"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                View All
+              </motion.button>
+            </div>
+          </section>
+
+          {/* All Bags Section */}
+          <section className="py-20 bg-(--base-2)">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2 className="text-4xl font-semibold text-(--text-6) mb-4">
+                All Bags
+              </h2>
+              <p className="text-(--text-4) mb-14">
+                Explore our complete collection of bags.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
+                <AnimatePresence>
+                  {products.slice(0, 6).map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      id={product._id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
+                      category={product.category}
+                      onQuickView={(id) => {
+                        const p = products.find((x) => x._id === id);
+                        if (p) navigate('/product-page', { state: { product: p } });
+                      }}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+
+              <motion.button
+                onClick={() => navigate('/shop/all')}
+                className="px-8 py-3 rounded-full bg-(--main-1) text-(--text) text-sm font-medium
+                           hover:bg-(--main-2) transition"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                View All
+              </motion.button>
             </div>
           </section>
 
           {/* Products Grid */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <motion.div
-              layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    name={product.name}
-                    price={product.price}
-                    image={product.image}
-                    category={product.category}
-                    onQuickView={(id) => {
-                      const p = products.find((x) => x.id === id);
-                      if (p) setSelectedProduct(p);
-                    }}
-                    onAddToCart={handleAddToCart}
-                  />
-                ))}
+          <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14">
+              <AnimatePresence>
+                {currentProducts.length > 0 &&
+                  currentProducts.map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      id={product._id}
+                      name={product.name}
+                      price={product.price}
+                      image={product.image}
+                      category={product.category}
+                      onQuickView={(id) => {
+                        const p = products.find((x) => x._id === id);
+                        if (p) navigate('/product-page', { state: { product: p } });
+                      }}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
               </AnimatePresence>
             </motion.div>
 
@@ -408,22 +330,59 @@ export default function Home() {
                 </p>
               </motion.div>
             )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-12">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-(--base-2) text-(--text) rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-(--base-3) transition-colors"
+                >
+                  Previous
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-4 py-2 rounded-lg transition-colors ${
+                      currentPage === page
+                        ? 'bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text)'
+                        : 'bg-(--base-2) text-(--text) hover:bg-(--base-3)'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-(--base-2) text-(--text) rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-(--base-3) transition-colors"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </section>
 
           <Footer />
         </>
       )}
 
+      {/* Check-out */}
       {currentView === "checkout" && (
         <CheckoutPage
           cartItems={cartItems}
           onBack={() => setCurrentView("shop")}
-          onProceedToPayment={() => setCurrentView("payment")}
+          setCurrentView={setCurrentView}
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
         />
       )}
 
+      {/* Payment page */}
       {currentView === "payment" && (
         <PaymentPage
           total={cartItems.reduce((sum, it) => sum + it.price * it.quantity, 0)}
@@ -432,6 +391,7 @@ export default function Home() {
         />
       )}
 
+      {/* order sucess */}
       {currentView === "success" && (
         <OrderSuccessPage
           onContinueShopping={() => {
@@ -440,43 +400,6 @@ export default function Home() {
           }}
         />
       )}
-
-      {/* Product Detail */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <ProductDetail
-            product={selectedProduct}
-            onClose={() => setSelectedProduct(null)}
-            onAddToCart={handleAddToCart}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Cart Drawer */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cartItems}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
-        onCheckout={() => {
-          setIsCartOpen(false);
-          setCurrentView("checkout");
-        }}
-      />
-
-      {/* Login Modal */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onLoginSuccess={(userData) => {
-          setUser(userData);
-          setIsLoginModalOpen(false);
-          toast.success("Welcome back!", {
-            description: `Logged in as ${userData.name}`,
-          });
-        }}
-      />
 
       {/* Toaster */}
       <Toaster />
