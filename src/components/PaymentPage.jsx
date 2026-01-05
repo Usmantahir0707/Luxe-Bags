@@ -1,6 +1,6 @@
-// src/components/PaymentPage.jsx
-// Minimal payment page (collects fake card details)
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { useShopContext } from "../context/ShopContext";
 
 export default function PaymentPage({
@@ -8,27 +8,51 @@ export default function PaymentPage({
   onBack = () => {},
   onComplete = () => {},
 }) {
+  const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
-  const { orderForm } = useShopContext();
-  function handlePay(e) {
+  const { orderForm, clearCart } = useShopContext();
+
+  const handlePay = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
-    const createOrder = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/orders`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", 
-          },
-          body: JSON.stringify(orderForm)
-        });
-        const data = await res.json()
-        console.log(data)
-        onComplete()
-      } catch (err) {}
-    };
-    createOrder()
-  }
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderForm)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Payment failed');
+      }
+
+      console.log('Order created successfully:', data);
+
+      // Show success notification
+      toast.success('Order placed successfully!', {
+        description: 'Thank you for your purchase. You will receive a confirmation email shortly.',
+      });
+
+      // Clear the cart
+      clearCart();
+
+      // Navigate to success page
+      navigate('/order-success');
+
+    } catch (error) {
+      console.error('Payment failed:', error);
+      toast.error('Payment failed', {
+        description: error.message || 'Please try again or contact support',
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-(--base-1) text-(--text)">

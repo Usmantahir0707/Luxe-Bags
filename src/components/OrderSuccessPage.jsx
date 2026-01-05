@@ -1,7 +1,14 @@
 // src/components/OrderSuccessPage.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
+import { toast } from 'sonner';
 
 export default function OrderSuccessPage({ onContinueShopping = () => {} }) {
+  useEffect(() => {
+    toast.success('Order completed!', {
+      description: 'Your order has been placed successfully. Check your email for confirmation.',
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-(--base-1)text-(--text) flex items-center justify-center">
       <div className="max-w-xl text-center p-8 bg-(--base-2) rounded-xl border border-(--base-3)">

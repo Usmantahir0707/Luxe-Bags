@@ -56,6 +56,9 @@ export default function UserProfile() {
       });
 
       if (result.success) {
+        toast.success('Profile updated successfully!', {
+          description: 'Your information has been saved',
+        });
         // Clear password fields
         setFormData(prev => ({
           ...prev,
@@ -66,6 +69,9 @@ export default function UserProfile() {
       }
     } catch (error) {
       console.error('Profile update failed:', error);
+      toast.error('Failed to update profile', {
+        description: error.message || 'Please try again',
+      });
     } finally {
       setLoading(false);
     }
@@ -101,9 +107,17 @@ export default function UserProfile() {
           confirmPassword: '',
         }));
         setShowPasswords({ current: false, new: false, confirm: false });
+
+        // Show specific success message for password change
+        toast.success('Password changed successfully!', {
+          description: 'Your password has been updated',
+        });
       }
     } catch (error) {
       console.error('Password change failed:', error);
+      toast.error('Failed to change password', {
+        description: error.message || 'Please check your current password and try again',
+      });
     } finally {
       setLoading(false);
     }
@@ -141,12 +155,12 @@ export default function UserProfile() {
 
   return (
     <div className="min-h-screen bg-(--base-1) text-(--text)">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-4 mb-8"
+          className="flex items-center gap-4 mb-6"
         >
           <motion.button
             whileHover={{ scale: 1.05, x: -2 }}
@@ -158,8 +172,8 @@ export default function UserProfile() {
             Back
           </motion.button>
           <div>
-            <h1 className="text-3xl font-bold">My Profile</h1>
-            <p className="text-(--text-4) mt-1">Manage your account settings</p>
+            <h1 className="text-2xl font-bold">My Profile</h1>
+            <p className="text-(--text-4) mt-1 text-sm">Manage your account settings</p>
           </div>
         </motion.div>
 
@@ -168,21 +182,21 @@ export default function UserProfile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex gap-2 mb-8 p-1 bg-(--base-2) rounded-xl border border-(--base-3) w-fit"
+          className="flex gap-1 mb-6 p-1 bg-(--base-2) rounded-lg border border-(--base-3) w-fit"
         >
           <button
             onClick={() => setActiveTab('profile')}
-            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 text-sm rounded-md font-medium transition-colors ${
               activeTab === 'profile'
                 ? 'bg-(--main-1) text-(--text)'
                 : 'text-(--text-4) hover:text-(--text) hover:bg-(--base-3)'
             }`}
           >
-            Profile Information
+            Profile
           </button>
           <button
             onClick={() => setActiveTab('security')}
-            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 text-sm rounded-md font-medium transition-colors ${
               activeTab === 'security'
                 ? 'bg-(--main-1) text-(--text)'
                 : 'text-(--text-4) hover:text-(--text) hover:bg-(--base-3)'
@@ -198,14 +212,14 @@ export default function UserProfile() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="bg-(--base-2) rounded-xl border border-(--base-3) p-8"
+            className="bg-(--base-2) rounded-xl border border-(--base-3) p-6"
           >
-            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-              <User className="w-5 h-5" />
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <User className="w-4 h-4" />
               Profile Information
             </h2>
 
-            <form onSubmit={handleProfileUpdate} className="space-y-6">
+            <form onSubmit={handleProfileUpdate} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-(--text) mb-2">
                   Full Name
@@ -270,14 +284,14 @@ export default function UserProfile() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="bg-(--base-2) rounded-xl border border-(--base-3) p-8"
+            className="bg-(--base-2) rounded-xl border border-(--base-3) p-6"
           >
-            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-              <Lock className="w-5 h-5" />
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Lock className="w-4 h-4" />
               Change Password
             </h2>
 
-            <form onSubmit={handlePasswordChange} className="space-y-6">
+            <form onSubmit={handlePasswordChange} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-(--text) mb-2">
                   Current Password

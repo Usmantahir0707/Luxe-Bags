@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PhoneInput from "./PhoneInput";
 import { useShopContext } from "../context/ShopContext";
+import { toast } from "sonner";
 
 export default function CheckoutPage({ onBack, setCurrentView }) {
   const { cartItems, orderForm, setOrderForm } = useShopContext();
@@ -55,7 +56,12 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
   };
 
   const handleProceed = () => {
-    if (!validateForm()) return; // prevent proceed
+    if (!validateForm()) {
+      toast.error('Please complete all required fields', {
+        description: 'Check the form for errors and try again',
+      });
+      return;
+    }
     setCurrentView("payment");
   };
 
