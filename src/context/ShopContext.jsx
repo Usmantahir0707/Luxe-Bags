@@ -131,7 +131,12 @@ export function ShopContextProvider({ children }) {
     try {
       const response = await authAPI.updateUser(userData);
       setUser(response.user || response);
-      toast.success("Profile updated successfully");
+
+      // Only show generic success toast if it's not a password change
+      if (!userData.password && !userData.currentPassword) {
+        toast.success("Profile updated successfully");
+      }
+
       return { success: true };
     } catch (error) {
       toast.error("Update failed", {

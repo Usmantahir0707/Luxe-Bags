@@ -98,7 +98,9 @@ export default function UserProfile() {
         password: formData.newPassword,
       });
 
-      if (result.success) {
+      console.log('Password change result:', result);
+
+      if (result && result.success) {
         // Clear password fields
         setFormData(prev => ({
           ...prev,
@@ -112,6 +114,8 @@ export default function UserProfile() {
         toast.success('Password changed successfully!', {
           description: 'Your password has been updated',
         });
+      } else {
+        console.log('Password change result was not successful:', result);
       }
     } catch (error) {
       console.error('Password change failed:', error);
