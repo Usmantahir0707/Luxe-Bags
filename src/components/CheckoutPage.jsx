@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PhoneInput from "./PhoneInput";
 import { useShopContext } from "../context/ShopContext";
 import { toast } from "sonner";
 
-export default function CheckoutPage({ onBack, setCurrentView }) {
-  const { cartItems, orderForm, setOrderForm } = useShopContext();
+export default function CheckoutPage() {
+  const navigate = useNavigate();
+  const { cartItems, orderForm, setOrderForm, user } = useShopContext();
   const [formError, setFormError] = useState({});
 
   const total = cartItems.reduce((s, it) => s + it.price * it.quantity, 0);
@@ -23,6 +25,18 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
       totalPrice: total,
     }));
   }, []);
+
+  // Pre-fill user information if logged in
+  useEffect(() => {
+    if (user && user.name && user.email) {
+      setOrderForm((p) => ({
+        ...p,
+        customerName: user.name,
+        customerEmail: user.email,
+        customerPhone: user.phone || p.customerPhone, // Only set phone if user has it
+      }));
+    }
+  }, [user]);
 
   // ------------------------------
   // VALIDATION LOGIC
@@ -62,7 +76,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
       });
       return;
     }
-    setCurrentView("payment");
+    navigate("/payment");
   };
 
   const borderClass = (err) =>
@@ -71,7 +85,7 @@ export default function CheckoutPage({ onBack, setCurrentView }) {
   return (
     <div className="min-h-screen bg-(--base-1) text-(--text)">
       <div className="max-w-4xl mx-auto p-6">
-        <button onClick={onBack} className="text-(--main-1) mb-4">
+        <button onClick={() => navigate('/')} className="text-(--main-1) mb-4">
           ← Back to shop
         </button>
         <h1 className="text-2xl font-semibold mb-6">Checkout</h1>

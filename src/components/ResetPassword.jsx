@@ -62,7 +62,6 @@ export default function ResetPassword() {
 
     try {
       const resetResponse = await authAPI.resetPassword(token, password.trim());
-      console.log('Reset password response:', resetResponse);
 
       setStatus('success');
       setMessage('Your password has been successfully reset! You can now log in with your new password.');

@@ -72,9 +72,7 @@ export function ShopContextProvider({ children }) {
   const login = async (credentials) => {
     setLoginLoading(true);
     try {
-      console.log('Login attempt with credentials:', { email: credentials.email, password: '***' });
       const response = await authAPI.login(credentials);
-      console.log('Login API response:', response);
 
       const { token, ...user } = response;
 

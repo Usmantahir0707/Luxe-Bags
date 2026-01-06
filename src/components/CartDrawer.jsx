@@ -59,7 +59,17 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
                 <span className="text-zinc-400">Subtotal</span>
                 <span className="font-semibold text-(--text)">Rs.{total.toFixed(2)}</span>
               </div>
-              <button onClick={onCheckout} className="w-full py-3 rounded-full bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold">Checkout</button>
+              <button
+                onClick={onCheckout}
+                disabled={items.length === 0}
+                className={`w-full py-3 rounded-full font-semibold transition-opacity ${
+                  items.length === 0
+                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50'
+                    : 'bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) hover:opacity-90'
+                }`}
+              >
+                Checkout
+              </button>
             </div>
           </motion.aside>
         </>

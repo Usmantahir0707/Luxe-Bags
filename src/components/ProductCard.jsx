@@ -46,9 +46,6 @@ const ProductCard = memo(forwardRef(function ProductCard(
           className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
         />
 
-        {/* Enhanced overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
-
         {/* Favorite button - repositioned */}
         <motion.button
           onClick={(e) => { e.stopPropagation(); setIsFavorite(prev => !prev); }}
@@ -64,22 +61,6 @@ const ProductCard = memo(forwardRef(function ProductCard(
         {/* Category badge - redesigned */}
         <div className="absolute top-3 left-3 px-2 py-1 rounded-lg bg-(--main-1)/90 backdrop-blur-sm text-(--text) text-xs font-medium shadow-md border border-(--main-1)/20">
           {category}
-        </div>
-
-        {/* Quick actions bar */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-          <div className="flex gap-2">
-            <motion.button
-              onClick={handleAddToCart}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow"
-              aria-label={`Add ${name} to bag`}
-            >
-              <ShoppingBag className="w-4 h-4" />
-              {isAdding ? 'Added!' : 'Add to Bag'}
-            </motion.button>
-          </div>
         </div>
       </div>
 
@@ -97,6 +78,18 @@ const ProductCard = memo(forwardRef(function ProductCard(
             <div className="w-2 h-2 rounded-full bg-(--main-2)" />
           </div>
         </div>
+
+        {/* Add to Cart Button - Always Visible */}
+        <motion.button
+          onClick={handleAddToCart}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
+          aria-label={`Add ${name} to bag`}
+        >
+          <ShoppingBag className="w-4 h-4" />
+          {isAdding ? 'Added!' : 'Add to Bag'}
+        </motion.button>
       </div>
     </div>
   );

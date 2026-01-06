@@ -24,9 +24,7 @@ export default function VerifyEmail() {
       }
 
       try {
-        console.log('Starting email verification for token:', token);
         const response = await authAPI.verifyEmail(token);
-        console.log('API response received:', response);
 
         // Validate response structure
         if (!response || typeof response !== 'object') {

@@ -10,6 +10,7 @@ import { useShopContext } from "../context/ShopContext";
 import Hero from "./Hero";
 import Header from "./Header";
 import AnnouncementBar from "./AnnouncementBar";
+import WhatsAppChat from "./WhatsAppChat";
 
 // Debounce hook
 function useDebounce(value, delay) {
@@ -40,7 +41,7 @@ const shopCategories = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const { cartItems, setCartItems, orderForm, setOrderForm } = useShopContext();
+  const { cartItems, setCartItems, orderForm, setOrderForm, addToCart, updateCartItemQuantity, removeFromCart } = useShopContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentView, setCurrentView] = useState("shop"); // shop | checkout | payment | success
   const [products, setProducts] = useState([]);
@@ -57,9 +58,8 @@ export default function Home() {
         const res = await fetch(`${import.meta.env.VITE_BASEURL}/api/products`);
         const data = await res.json();
         setProducts(data.data);
-        console.log(data.data)
       } catch (err) {
-        console.log(err);
+        // Error fetching products
       }
     };
     getProducts();
@@ -95,41 +95,19 @@ export default function Home() {
   };
 
   // handle add to cart
-  const handleAddToCart = (productId, selectedColor) => {
-    const product = products.find((p) => {
-      return p._id === productId;
-    });
+  const handleAddToCart = (productId) => {
+    const product = products.find((p) => p._id === productId);
     if (!product) return;
-    setCartItems((prev) => {
-      const existing = prev.find((i) => i.id === productId);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === productId ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [
-        ...prev,
-        {
-          id: product._id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          quantity: 1,
-          color: selectedColor ? selectedColor : product.colors[0],
-        },
-      ];
-    });
+    addToCart(product);
   };
 
   // handle update quantity
   const handleUpdateQuantity = (id, quantity) => {
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
+    updateCartItemQuantity(id, quantity);
   };
 
   const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    removeFromCart(id);
   };
 
   const totalItems = cartItems.reduce((s, i) => s + i.quantity, 0);
@@ -403,6 +381,9 @@ export default function Home() {
 
       {/* Toaster */}
       <Toaster />
+
+      {/* WhatsApp Chat */}
+      <WhatsAppChat />
     </div>
   );
 }

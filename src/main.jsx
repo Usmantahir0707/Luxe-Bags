@@ -15,6 +15,9 @@ const SearchResults = lazy(() => import('./components/SearchResults.jsx'))
 const ProductPage = lazy(() => import('./components/ProductPage.jsx'))
 const UserProfile = lazy(() => import('./components/UserProfile.jsx'))
 const OrderHistory = lazy(() => import('./components/OrderHistory.jsx'))
+const CheckoutPage = lazy(() => import('./components/CheckoutPage.jsx'))
+const PaymentPage = lazy(() => import('./components/PaymentPage.jsx'))
+const OrderSuccessPage = lazy(() => import('./components/OrderSuccessPage.jsx'))
 const VerifyEmail = lazy(() => import('./components/VerifyEmail.jsx'))
 const ForgotPassword = lazy(() => import('./components/ForgotPassword.jsx'))
 const ResetPassword = lazy(() => import('./components/ResetPassword.jsx'))
@@ -96,6 +99,30 @@ const route = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <OrderHistory/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/checkout',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <CheckoutPage/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/payment',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <PaymentPage/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/order-success',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <OrderSuccessPage/>
           </Suspense>
         )
       },

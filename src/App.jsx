@@ -21,13 +21,14 @@ function AppContent() {
     user,
     setUser,
     cartItems,
-    setCartItems,
     searching,
     setSearching,
     searchValue,
     setSearchValue,
     suggestions,
-    setSuggestions
+    setSuggestions,
+    updateCartItemQuantity,
+    removeFromCart
   } = useShopContext();
 
   // Handle double-slash verification URLs
@@ -102,13 +103,17 @@ function AppContent() {
   }, [searching]);
 
   const handleUpdateQuantity = (id, quantity) => {
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
+    updateCartItemQuantity(id, quantity);
   };
 
   const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    removeFromCart(id);
+  };
+
+  const handleCheckout = () => {
+    setIsCartOpen(false);
+    // Navigate to checkout or handle checkout logic
+    // For now, just close the cart
   };
 
   return (
@@ -144,6 +149,7 @@ function AppContent() {
       onRemoveItem={handleRemoveItem}
       onCheckout={() => {
         setIsCartOpen(false);
+        navigate('/checkout');
       }}
     />
 

@@ -23,7 +23,7 @@ export default function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
-    console.log("Form submitted:", formData);
+    // Form submitted successfully
     // Reset form
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
