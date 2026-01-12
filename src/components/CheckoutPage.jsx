@@ -80,7 +80,7 @@ export default function CheckoutPage() {
   };
 
   const borderClass = (err) =>
-    `p-3 bg-zinc-950 border rounded w-full ${err ? "border-red-500" : "border-zinc-800"}`;
+    `p-3 bg-(--base-1) border rounded w-full ${err ? "border-red-500" : "border-zinc-800"}`;
 
   return (
     <div className="min-h-screen bg-(--base-1) text-(--text)">
@@ -136,7 +136,7 @@ export default function CheckoutPage() {
                       setOrderForm((p) => ({ ...p, customerPhone: val }));
                       setFormError((err) => ({ ...err, customerPhone: "" }));
                     }}
-                    inputStyle={"bg-zinc-950"}
+                    inputStyle={"bg-(--base-1)"}
                     border={formError.customerPhone ? "border border-red-500" : "border border-zinc-800"}
                   />
                   {formError.customerPhone && (

@@ -90,7 +90,15 @@ export default function SearchResults() {
   const location = useLocation();
   const navigate = useNavigate();
   const { addToCart } = useShopContext();
-  const searchQuery = location.state?.query || "";
+  const searchQuery = location.state?.query || new URLSearchParams(location.search).get('query') || "";
+
+  // Redirect to home if no search query is provided
+  useEffect(() => {
+    if (!searchQuery) {
+      toast.info("No search query provided");
+      navigate('/');
+    }
+  }, [searchQuery, navigate]);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,6 +108,49 @@ export default function SearchResults() {
   const [showFilters, setShowFilters] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(true);
+
+  // Automatically select category based on search query
+  useEffect(() => {
+    if (searchQuery) {
+      const queryLower = searchQuery.toLowerCase();
+
+      // Check if search query exactly matches any category (case-insensitive)
+      const exactMatch = categories.find(category =>
+        category.toLowerCase() === queryLower
+      );
+
+      if (exactMatch) {
+        setSelectedCategory(exactMatch);
+      } else {
+        // Check if category name is contained within the search query
+        const categoryInQuery = categories.find(category =>
+          queryLower.includes(category.toLowerCase())
+        );
+
+        if (categoryInQuery) {
+          setSelectedCategory(categoryInQuery);
+        } else {
+          // Check if search query starts with a category name
+          const queryStartsWithCategory = categories.find(category =>
+            queryLower.startsWith(category.toLowerCase())
+          );
+
+          if (queryStartsWithCategory) {
+            setSelectedCategory(queryStartsWithCategory);
+          } else {
+            // Check if category name starts with the search query
+            const categoryStartsWithQuery = categories.find(category =>
+              category.toLowerCase().startsWith(queryLower)
+            );
+
+            if (categoryStartsWithQuery) {
+              setSelectedCategory(categoryStartsWithQuery);
+            }
+          }
+        }
+      }
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -198,14 +249,17 @@ export default function SearchResults() {
               className="flex items-center gap-2 px-4 py-2 bg-(--base-2) border border-(--base-3) rounded-lg text-(--text) hover:bg-(--base-3) transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back
+              
             </motion.button>
             <div>
               <h1 className="text-3xl text-center font-bold text-(--text)">
-                Search Results {searchQuery && `for "${searchQuery}"`}
+                Search Results {searchQuery && <span className="text-(--main-1)">for "{searchQuery}"</span>}
               </h1>
-              <p className="text-zinc-400 mt-1 text-center">
+              <p className="text-zinc-500 mt-1 text-center">
                 {sortedProducts.length} results found
+                {selectedCategory !== "All" && searchQuery && (
+                  <span className="text-(--main-1) ml-2">• Auto-filtered by: {selectedCategory}</span>
+                )}
               </p>
             </div>
           </div>
@@ -267,7 +321,7 @@ export default function SearchResults() {
                         className="flex items-center gap-2 px-4 py-2 bg-(--base-3) rounded-lg text-(--text) hover:bg-(--base-4)"
                       >
                         <ArrowLeft className="w-5 h-5" />
-                        Back
+                       
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -324,7 +378,7 @@ export default function SearchResults() {
                               className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
                                 selectedCategory === category
                                   ? "bg-(--main-1) text-(--text)"
-                                  : "text-zinc-300 hover:bg-(--base-3)"
+                                  : "text-zinc-400 hover:bg-(--base-3)"
                               }`}
                             >
                               {category}
@@ -343,7 +397,7 @@ export default function SearchResults() {
                   </h4>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm text-zinc-400 mb-1">Min Price</label>
+                      <label className="block text-sm text-zinc-500 mb-1">Min Price</label>
                       <input
                         type="range"
                         min="0"
@@ -357,7 +411,7 @@ export default function SearchResults() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-zinc-400 mb-1">Max Price</label>
+                      <label className="block text-sm text-zinc-500 mb-1">Max Price</label>
                       <input
                         type="range"
                         min="0"
@@ -421,7 +475,7 @@ export default function SearchResults() {
               <h2 className="text-2xl font-bold text-(--text) mb-2">
                 {sortedProducts.length} Results Found
               </h2>
-              <p className="text-zinc-400">
+              <p className="text-zinc-500">
                 {selectedCategory !== "All" && `Category: ${selectedCategory} • `}
                 Price: ${priceRange[0]} - ${priceRange[1]}
                 {searchQuery && ` • Search: "${searchQuery}"`}
@@ -464,11 +518,11 @@ export default function SearchResults() {
                 animate={{ opacity: 1 }}
                 className="text-center py-16"
               >
-                <Search className="w-16 h-16 text-zinc-400 mx-auto mb-4" />
+                <Search className="w-16 h-16 text-zinc-500 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-(--text) mb-2">
                   No bags found
                 </h3>
-                <p className="text-zinc-400 mb-6">
+                <p className="text-zinc-500 mb-6">
                   Try adjusting your filters or search terms.
                 </p>
                 <motion.button

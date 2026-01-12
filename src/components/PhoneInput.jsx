@@ -85,7 +85,7 @@ export default function PhoneInput({ value, setValue, inputStyle, border, listHe
   return (
     <div
       role="container"
-      className={`flex items-center text-[14px] gap-2 bg-gray-300 p-2 h-[50px] max-w-[270px] ${inputStyle && inputStyle}`}
+      className={`flex items-center text-[14px] gap-2 bg-(--base-1) p-2 h-[50px] max-w-[270px] ${inputStyle && inputStyle}`}
     >
       <div
         onClick={() => setShowCountries((p) => !p)}

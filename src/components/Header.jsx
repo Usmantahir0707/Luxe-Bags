@@ -15,6 +15,12 @@ import {
   Instagram,
   Youtube,
   MessageSquare,
+  Handbag,
+  Briefcase,
+  BackpackIcon,
+  Gem,
+  Watch,
+  Shirt,
 } from "lucide-react";
 import { useThemeContext } from "../context/ThemeContext";
 import { useShopContext } from "../context/ShopContext";
@@ -37,7 +43,18 @@ export default function Header({ showSearch = true }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false);
 
-  const themes = ["light", "dark", "blue", "purple", "green", "orange"];
+  const themes = [
+    "light",
+    "dark",
+    "blue",
+    "purple",
+    "green",
+    "orange",
+    "crimson",
+    "teal",
+    "gold",
+    "coffee",
+  ];
 
   const cycleTheme = () => {
     const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
@@ -57,16 +74,64 @@ export default function Header({ showSearch = true }) {
     { name: 'Home', href: '/', current: location.pathname === '/' },
     { name: 'About Us', href: '/about', current: location.pathname === '/about' },
     { name: 'Contact Us', href: '/contact', current: location.pathname === '/contact' },
+    { name: 'Track Order', href: '/track-order', current: location.pathname === '/track-order' },
   ];
 
   const shopCategories = [
-    { name: 'All Bags', href: '/shop/all' },
-    { name: 'Handbags', href: '/shop/handbag' },
-    { name: 'Shoulder Bags', href: '/shop/shoulder' },
-    { name: 'Tote Bags', href: '/shop/tote' },
-    { name: 'Crossbody Bags', href: '/shop/crossbody' },
-    { name: 'Clutches', href: '/shop/clutch' },
-    { name: 'Backpacks', href: '/shop/backpack' },
+    {
+      name: 'All Bags',
+      href: '/shop/all',
+      icon: ShoppingBag,
+      description: 'Browse our complete collection'
+    },
+    {
+      name: 'Handbags',
+      href: '/shop/handbag',
+      icon: Handbag,
+      description: 'Elegant and sophisticated'
+    },
+    {
+      name: 'Shoulder Bags',
+      href: '/shop/shoulder',
+      icon: Briefcase,
+      description: 'Comfortable everyday carry'
+    },
+    {
+      name: 'Tote Bags',
+      href: '/shop/tote',
+      icon: ShoppingBag,
+      description: 'Spacious and versatile'
+    },
+    {
+      name: 'Crossbody Bags',
+      href: '/shop/crossbody',
+      icon: Handbag,
+      description: 'Hands-free convenience'
+    },
+    {
+      name: 'Clutches',
+      href: '/shop/clutch',
+      icon: Gem,
+      description: 'Perfect for special occasions'
+    },
+    {
+      name: 'Backpacks',
+      href: '/shop/backpack',
+      icon: BackpackIcon,
+      description: 'Stylish and functional'
+    },
+    {
+      name: 'Wallets',
+      href: '/shop/wallet',
+      icon: Watch,
+      description: 'Compact and organized'
+    },
+    {
+      name: 'Belt Bags',
+      href: '/shop/beltbag',
+      icon: Shirt,
+      description: 'Trendy waist-worn style'
+    },
   ];
 
   return (
@@ -140,26 +205,61 @@ export default function Header({ showSearch = true }) {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-(--base-1) border border-(--base-3) rounded-xl shadow-xl overflow-hidden z-50"
+                      className="absolute top-[80%] left-0 mt-2 w-80 bg-(--base-1) border border-(--base-3) rounded-xl shadow-xl overflow-hidden z-50"
                       role="menu"
                     >
-                      {shopCategories.map((category, index) => (
-                        <motion.div
-                          key={category.name}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
+                      <div className="p-4 border-b border-(--base-3)">
+                        <h3 className="text-lg font-semibold text-(--text)">Shop Categories</h3>
+                        <p className="text-sm text-(--text-4)">Discover our premium bag collection</p>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {shopCategories.map((category, index) => {
+                          const IconComponent = category.icon;
+                          return (
+                            <motion.div
+                              key={category.name}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              <Link
+                                to={category.href}
+                                className="flex items-center gap-3 px-4 py-4 text-sm text-(--text-4) hover:text-(--text) hover:bg-(--base-2) transition-all duration-200 group"
+                                role="menuitem"
+                                onClick={() => setIsShopDropdownOpen(false)}
+                              >
+                                <div className="flex-shrink-0">
+                                  <IconComponent className="w-5 h-5 text-(--text-4) group-hover:text-(--main-1) transition-colors" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-(--text) group-hover:text-(--main-1) transition-colors">
+                                    {category.name}
+                                  </div>
+                                  <div className="text-xs text-(--text-4) group-hover:text-(--text-3) transition-colors truncate">
+                                    {category.description}
+                                  </div>
+                                </div>
+                                <motion.div
+                                  whileHover={{ x: 2 }}
+                                  className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <ChevronDown className="w-4 h-4 rotate-[-90deg] text-(--main-1)" />
+                                </motion.div>
+                              </Link>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                      <div className="p-4 border-t border-(--base-3) bg-(--base-2)">
+                        <Link
+                          to="/shop/all"
+                          onClick={() => setIsShopDropdownOpen(false)}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-linear-to-r from-(--main-1) to-(--main-2) text-(--text) rounded-lg hover:bg-(--main-2) transition-colors font-medium text-sm"
                         >
-                          <Link
-                            to={category.href}
-                            className="block px-4 py-3 text-sm text-(--text-4) hover:text-(--text) hover:bg-(--base-2) transition-colors"
-                            role="menuitem"
-                            onClick={() => setIsShopDropdownOpen(false)}
-                          >
-                            {category.name}
-                          </Link>
-                        </motion.div>
-                      ))}
+                          <ShoppingBag className="w-4 h-4" />
+                          View All Bags
+                        </Link>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

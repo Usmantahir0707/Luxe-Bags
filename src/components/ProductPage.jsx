@@ -551,11 +551,11 @@ export default function ProductPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="absolute top-0 right-0 w-1/2 h-full z-10 pointer-events-none"
+                className="fixed top-[100px] left-1/2 w-90 h-100 z-10 pointer-events-none"
                 style={{
                   backgroundImage: `url(${product.image})`,
-                  backgroundSize: '200% 200%',
-                  backgroundPosition: `${magnifierPosition.x * 100}% ${magnifierPosition.y * 100}%`,
+                  backgroundSize: '400% 400%',
+                  backgroundPosition: `${magnifierPosition.x * 90}% ${magnifierPosition.y * 100}%`,
                   backgroundRepeat: 'no-repeat',
                   borderRadius: '1.5rem',
                   boxShadow: '0 25px 50px rgba(0,0,0,0.15)',

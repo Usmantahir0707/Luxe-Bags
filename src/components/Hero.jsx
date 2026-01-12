@@ -115,6 +115,7 @@ const rightImageY = useSpring(rightYRaw, {
         >
            Save big on timeless elegance!
         </motion.p>
+ 
 
         {/* CTA Buttons */}
         <motion.div
@@ -124,19 +125,19 @@ const rightImageY = useSpring(rightYRaw, {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
         >
           <motion.button
-            whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-3 bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold rounded-full hover:opacity-90 transition-opacity"
+            className="custom-hover px-8 py-3 bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold border-2 border-(--main-1) rounded-md hover:opacity-90 hover:text-(--text-6) transition-opacity cursor-pointer"
           >
             Shop Collection
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.05 }}
+           whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/')}
-            className="px-8 py-3 border-2 border-(--base-3)/50 text-(--text) font-semibold rounded-full hover:bg-(--base-3)/10 transition-colors"
+            className="custom-hover2 px-8 py-3 border-2 border-(--main-1)/50 text-(--text) font-semibold rounded-md hover:bg-(--base-1)/10 transition-colors cursor-pointer"
           >
             Learn More
           </motion.button>

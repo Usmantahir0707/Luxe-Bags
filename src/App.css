@@ -10,23 +10,10 @@
   --text-3: #71717a;
   --text-4: #52525b;
   --text-5: #3f3f46;
-  --text-6: #e1e1e8;
+  --text-6: white;
 }
 
-[data-theme="light"] {
-  --base-1: #ffffff;
-  --base-2: #4b6181;
-  --base-3: #f2f4f7;
-  --base-4: #e2e8f0;
-  --main-1: #0ea5e9;
-  --main-2: #0284c7;
-  --text: #0f172a;
-  --text-2: #3a3b3c;
-  --text-3: #131314;
-  --text-4: #333435;
-  --text-5: #262829;
-  --text-6: #c4c7cd;
-}
+
 
 [data-theme="blue"] {
   --base-1: #0f1419;
@@ -36,6 +23,11 @@
   --main-1: #3b82f6;
   --main-2: #1d4ed8;
   --text: #f1f5f9;
+  --text-2: #3a3b3c;
+  --text-3: #131314;
+  --text-4: #333435;
+  --text-5: #262829;
+  --text-6: white;
 }
 
 [data-theme="purple"] {
@@ -46,6 +38,11 @@
   --main-1: #a855f7;
   --main-2: #9333ea;
   --text: #f3e8ff;
+  --text-2: #3a3b3c;
+  --text-3: #131314;
+  --text-4: #333435;
+  --text-5: #262829;
+  --text-6: white;
 }
 
 [data-theme="green"] {
@@ -56,6 +53,11 @@
   --main-1: #10b981;
   --main-2: #059669;
   --text: #f0fdf4;
+  --text-2: #3a3b3c;
+  --text-3: #131314;
+  --text-4: #333435;
+  --text-5: #262829;
+  --text-6: white;
 }
 
 [data-theme="orange"] {
@@ -66,6 +68,86 @@
   --main-1: #f97316;
   --main-2: #ea580c;
   --text: #fef7ed;
+  --text-2: #3a3b3c;
+  --text-3: #131314;
+  --text-4: #333435;
+  --text-5: #262829;
+  --text-6: white;
+}
+
+[data-theme="light"] {
+  --base-1: #ffffff;
+  --base-2: #f4f4f5;
+  --base-3: #e4e4e7;
+  --base-4: #d4d4d8;
+  --main-1: oklch(64.5% 0.246 16.439);
+  --main-2: #db2777;
+  --text: #09090b;
+  --text-2: #18181b;
+  --text-3: #27272a;
+  --text-4: #3f3f46;
+  --text-5: #52525b;
+  --text-6: #000000;
+}
+
+[data-theme="crimson"] {
+  --base-1: #2a0a0a;
+  --base-2: #450a0a;
+  --base-3: #7f1d1d;
+  --base-4: #991b1b;
+  --main-1: #f87171;
+  --main-2: #ef4444;
+  --text: #fef2f2;
+  --text-2: #fee2e2;
+  --text-3: #fecaca;
+  --text-4: #fca5a5;
+  --text-5: #f87171;
+  --text-6: white;
+}
+
+[data-theme="teal"] {
+  --base-1: #042f2e;
+  --base-2: #134e4a;
+  --base-3: #115e59;
+  --base-4: #0f766e;
+  --main-1: #2dd4bf;
+  --main-2: #14b8a6;
+  --text: #f0fdfa;
+  --text-2: #ccfbf1;
+  --text-3: #99f6e4;
+  --text-4: #5eead4;
+  --text-5: #2dd4bf;
+  --text-6: white;
+}
+
+[data-theme="gold"] {
+  --base-1: #292524;
+  --base-2: #44403c;
+  --base-3: #57534e;
+  --base-4: #78716c;
+  --main-1: #fbbf24;
+  --main-2: #f59e0b;
+  --text: #fffbeb;
+  --text-2: #fef3c7;
+  --text-3: #fde68a;
+  --text-4: #fcd34d;
+  --text-5: #fbbf24;
+  --text-6: white;
+}
+
+[data-theme="coffee"] {
+  --base-1: #1e1b19;
+  --base-2: #2e2a27;
+  --base-3: #3e3835;
+  --base-4: #4e4642;
+  --main-1: #d4a373;
+  --main-2: #bc8a5f;
+  --text: #faedcd;
+  --text-2: #fefae0;
+  --text-3: #e9edc9;
+  --text-4: #ccd5ae;
+  --text-5: #d4a373;
+  --text-6: white;
 }
 
 .slick-dots {
@@ -98,4 +180,51 @@
   background: conic-gradient(var(--main-1), var(--main-2), var(--main-1));
   filter: blur(8px);
   z-index: -1;
+}
+
+/* Custom button hover effect */
+/* 1 */
+.custom-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: var(--base-1);
+  transition: height 0.3s ease;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.custom-hover:hover::before {
+  height: 100%;
+}
+
+/* 2 */
+.custom-hover2 {
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-hover2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130%;
+  height: 0;
+  background: var(--main-1);
+  transition: height 0.3s ease;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.custom-hover2:hover::before {
+  height: 130%;
 }

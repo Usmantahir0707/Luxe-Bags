@@ -31,7 +31,7 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
               ) : (
                 <ul className="space-y-4">
                   {items.map((it) => (
-                    <li key={it.id} className="flex items-center gap-3">
+                    <li key={`${it.id}-${it.color || 'no-color'}-${it.size || 'no-size'}`} className="flex items-center gap-3">
                       <img src={it.image} alt={it.name} loading="lazy" className="w-16 h-16 object-cover rounded-md" />
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
@@ -39,13 +39,13 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
                             <p className="text-(--text) text-sm">{it.name}</p>
                             <p className="text-zinc-400 text-xs">Rs.{it.price.toFixed(2)}</p>
                           </div>
-                          <button onClick={() => onRemoveItem(it.id)} className="text-(--main-1) text-sm">Remove</button>
+                          <button onClick={() => onRemoveItem(it.id, it.color, it.size)} className="text-(--main-1) text-sm">Remove</button>
                         </div>
 
                         <div className="mt-3 flex items-center gap-2">
-                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1))} className="px-2 py-1 rounded bg-(--base-3) text-(--text)">-</button>
+                          <button onClick={() => onUpdateQuantity(it.id, Math.max(1, it.quantity - 1), it.color, it.size)} className="px-2 py-1 rounded bg-(--base-3) text-(--text)">-</button>
                           <div className="px-3 py-1 rounded bg-(--base-3) text-sm text-(--text)">{it.quantity}</div>
-                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1)} className="px-2 py-1 rounded bg-(--base-3) text-(--text)">+</button>
+                          <button onClick={() => onUpdateQuantity(it.id, it.quantity + 1, it.color, it.size)} className="px-2 py-1 rounded bg-(--base-3) text-(--text)">+</button>
                         </div>
                       </div>
                     </li>

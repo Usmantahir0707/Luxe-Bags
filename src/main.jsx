@@ -21,6 +21,7 @@ const OrderSuccessPage = lazy(() => import('./components/OrderSuccessPage.jsx'))
 const VerifyEmail = lazy(() => import('./components/VerifyEmail.jsx'))
 const ForgotPassword = lazy(() => import('./components/ForgotPassword.jsx'))
 const ResetPassword = lazy(() => import('./components/ResetPassword.jsx'))
+const TrackOrder = lazy(() => import('./components/TrackOrder.jsx'))
 
 // Loading component
 const LoadingSpinner = () => (
@@ -147,6 +148,14 @@ const route = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <ResetPassword/>
+          </Suspense>
+        )
+      },
+      {
+        path:'/track-order',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <TrackOrder/>
           </Suspense>
         )
       },

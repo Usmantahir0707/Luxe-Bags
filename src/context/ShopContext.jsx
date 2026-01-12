@@ -164,23 +164,53 @@ export function ShopContextProvider({ children }) {
   // Cart functions
   const addToCart = (product, quantity = 1, selectedColor = null, selectedSize = null) => {
     setCartItems(prev => {
-      const existing = prev.find(item =>
-        item.id === product._id &&
-        item.color === selectedColor &&
-        item.size === selectedSize
-      );
+      // Normalize empty strings to null for consistent matching
+      const normalizedColor = selectedColor === '' ? null : selectedColor;
+      const normalizedSize = selectedSize === '' ? null : selectedSize;
+
+      // Find existing item - smart matching for same product
+      const existing = prev.find(item => {
+        const idMatch = item.id === product._id;
+
+        // Normalize stored item colors/sizes too
+        const itemColor = item.color === '' ? null : item.color;
+        const itemSize = item.size === '' ? null : item.size;
+
+        // If no color/size specified, match any existing item with same ID
+        if (normalizedColor === null && normalizedSize === null) {
+          return idMatch;
+        }
+
+        // If color/size specified, be flexible - match if colors match or either is null/empty
+        const colorMatch = normalizedColor === null || itemColor === null || normalizedColor === itemColor;
+        const sizeMatch = normalizedSize === null || itemSize === null || normalizedSize === itemSize;
+
+        return idMatch && colorMatch && sizeMatch;
+      });
 
       if (existing) {
         toast.success("Added to cart", {
           description: `${product.name} quantity increased`,
         });
-        return prev.map(item =>
-          item.id === product._id &&
-          item.color === selectedColor &&
-          item.size === selectedSize
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+
+        return prev.map(item => {
+          // Normalize for comparison
+          const itemColor = item.color === '' ? null : item.color;
+          const itemSize = item.size === '' ? null : item.size;
+
+          if (item.id === product._id &&
+              (normalizedColor === null || itemColor === null || normalizedColor === itemColor) &&
+              (normalizedSize === null || itemSize === null || normalizedSize === itemSize)) {
+            return {
+              ...item,
+              quantity: item.quantity + quantity,
+              // Update color/size if they were null/empty and we're now specifying them
+              color: item.color || normalizedColor,
+              size: item.size || normalizedSize
+            };
+          }
+          return item;
+        });
       }
 
       toast.success("Added to cart", { description: product.name });
@@ -190,8 +220,8 @@ export function ShopContextProvider({ children }) {
         price: product.price,
         image: product.image,
         quantity,
-        color: selectedColor,
-        size: selectedSize,
+        color: normalizedColor,
+        size: normalizedSize,
       }];
     });
   };
@@ -199,9 +229,7 @@ export function ShopContextProvider({ children }) {
   const updateCartItemQuantity = (id, quantity, color = null, size = null) => {
     setCartItems(prev =>
       prev.map(item =>
-        item.id === id &&
-        item.color === color &&
-        item.size === size
+        item.id === id && item.color === color && item.size === size
           ? { ...item, quantity }
           : item
       )

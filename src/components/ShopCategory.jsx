@@ -16,6 +16,8 @@ const categories = [
   "Crossbody",
   "Clutch",
   "Backpack",
+  "Wallet",
+  "Beltbag",
 ];
 
 export default function ShopCategory() {

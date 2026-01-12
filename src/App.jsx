@@ -54,8 +54,12 @@ function AppContent() {
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
   const handleSearch = () => {
+    if (!searchValue.trim()) {
+      toast.info("Please enter a search term");
+      return;
+    }
     setSearching(false);
-    navigate('/search-result', { state: { query: searchValue } });
+    navigate('/search-result', { state: { query: searchValue.trim() } });
   };
 
   /* -------------------- LENIS SETUP -------------------- */
@@ -102,12 +106,12 @@ function AppContent() {
     };
   }, [searching]);
 
-  const handleUpdateQuantity = (id, quantity) => {
-    updateCartItemQuantity(id, quantity);
+  const handleUpdateQuantity = (id, quantity, color = null, size = null) => {
+    updateCartItemQuantity(id, quantity, color, size);
   };
 
-  const handleRemoveItem = (id) => {
-    removeFromCart(id);
+  const handleRemoveItem = (id, color = null, size = null) => {
+    removeFromCart(id, color, size);
   };
 
   const handleCheckout = () => {
