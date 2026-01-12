@@ -31,7 +31,7 @@ function useDebounce(value, delay) {
 }
 
 const shopCategories = [
-  { name: 'Handbags', href: '/shop/handbag', image: '/src/assets/b1.jpg' },
+  { name: 'Handbags', href: '/shop/handbag', image: 'src/assets/b1.jpg' },
   { name: 'Shoulder Bags', href: '/shop/shoulder', image: '/src/assets/b2.jpg' },
   { name: 'Tote Bags', href: '/shop/tote', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg' },
   { name: 'Crossbody Bags', href: '/shop/crossbody', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg' },
