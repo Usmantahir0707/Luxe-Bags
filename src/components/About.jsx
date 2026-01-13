@@ -90,12 +90,12 @@ export default function About() {
             >
               <div className="grid grid-cols-1 gap-4">
                 <img
-                  src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg"
+                  src="/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg"
                   alt="Luxe Bags craftsmanship"
                   className="rounded-2xl shadow-2xl w-full h-48 object-cover"
                 />
                 <img
-                  src="/src/assets/b1.jpg"
+                  src="/assets/b1.jpg"
                   alt="Premium materials"
                   className="rounded-2xl shadow-2xl w-full h-48 object-cover"
                 />
@@ -150,17 +150,17 @@ export default function About() {
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             <img
-              src="/src/assets/b2.jpg"
+              src="/assets/b2.jpg"
               alt="Craftsmanship detail"
               className="rounded-xl shadow-lg w-full h-48 object-cover"
             />
             <img
-              src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
+              src="/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
               alt="Design process"
               className="rounded-xl shadow-lg w-full h-48 object-cover"
             />
             <img
-              src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
+              src="/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
               alt="Finished product"
               className="rounded-xl shadow-lg w-full h-48 object-cover"
             />
