@@ -307,6 +307,7 @@ export default function Home() {
                   No products found matching your criteria.
                 </p>
               </motion.div>
+              
             )}
 
             {/* Pagination */}
