@@ -79,7 +79,7 @@ function Searching({ searching, setSearching, searchValue, setSearchValue, sugge
                         transition={{ duration: 0.2, delay: index * 0.05 }}
                         whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => { setSearchValue(item); handleSearch(); }}
+                        onClick={() => { setSearchValue(item); handleSearch(item); }}
                         className="p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
                       >
                         {item}

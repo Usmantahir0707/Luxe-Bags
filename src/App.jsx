@@ -53,13 +53,14 @@ function AppContent() {
 
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
-  const handleSearch = () => {
-    if (!searchValue.trim()) {
+  const handleSearch = (customQuery = null) => {
+    const queryToUse = customQuery || searchValue;
+    if (!queryToUse?.trim()) {
       toast.info("Please enter a search term");
       return;
     }
     setSearching(false);
-    navigate('/search-result', { state: { query: searchValue.trim() } });
+    navigate('/search-result', { state: { query: queryToUse.trim() } });
   };
 
   /* -------------------- LENIS SETUP -------------------- */
