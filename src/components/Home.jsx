@@ -26,7 +26,6 @@ function useDebounce(value, delay) {
     };
   }, [value, delay]);
 
-
   return debouncedValue;
 }
 
@@ -48,8 +47,6 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const productsPerPage = 12;
-
-
 
   // Getting product data
   useEffect(() => {
@@ -138,8 +135,8 @@ export default function Home() {
               </p>
 
               {/* Categories */}
-              <motion.div 
-              
+              <motion.div
+
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10  items-center">
 
                 {shopCategories.map((category) => (
@@ -307,7 +304,6 @@ export default function Home() {
                   No products found matching your criteria.
                 </p>
               </motion.div>
-              
             )}
 
             {/* Pagination */}
