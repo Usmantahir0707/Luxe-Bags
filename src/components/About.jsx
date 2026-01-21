@@ -150,17 +150,17 @@ export default function About() {
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             <img
-              src="/assets/b2.jpg"
+              src="/src/assets/b2.jpg"
               alt="Craftsmanship detail"
               className="rounded-xl shadow-lg w-full h-48 object-cover"
             />
             <img
-              src="/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
+              src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
               alt="Design process"
               className="rounded-xl shadow-lg w-full h-48 object-cover"
             />
             <img
-              src="/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
+              src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
               alt="Finished product"
               className="rounded-xl shadow-lg w-full h-48 object-cover"
             />
