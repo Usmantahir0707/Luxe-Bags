@@ -1,8 +1,43 @@
 // src/components/CartDrawer.jsx
 // Simple sliding drawer cart - single file
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import LoadingSpinner from './LoadingSpinner';
+
+// Simple image component with native onLoad
+const SimpleImage = ({ src, alt, className, loading = 'lazy' }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Show spinner while loading */}
+      {!imageLoaded && !hasError && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <LoadingSpinner size="sm" />
+        </div>
+      )}
+      
+      {/* Show error message if image fails to load */}
+      {hasError && (
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-(--text-4)">
+          Image not available
+        </div>
+      )}
+      
+      {/* The actual image with native onLoad */}
+      <img
+        src={src}
+        alt={alt}
+        loading={loading}
+        onLoad={() => setImageLoaded(true)}
+        onError={() => setHasError(true)}
+        className={`w-full h-full object-cover ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+      />
+    </div>
+  );
+};
 
 export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onUpdateQuantity = () => {}, onRemoveItem = () => {}, onCheckout = () => {} }) {
   const total = items.reduce((s, it) => s + it.price * it.quantity, 0);
@@ -32,7 +67,12 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
                 <ul className="space-y-4">
                   {items.map((it) => (
                     <li key={`${it.id}-${it.color || 'no-color'}-${it.size || 'no-size'}`} className="flex items-center gap-3">
-                      <img src={it.image} alt={it.name} loading="lazy" className="w-16 h-16 object-cover rounded-md" />
+                      <SimpleImage
+                        src={it.image}
+                        alt={it.name}
+                        loading="lazy"
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>

@@ -1,10 +1,11 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Star, Award, Users, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Balloon } from "../hooks/useBalloonAnimation";
 import leftCelebration from "../assets/left.png";
 import rightCelebration from "../assets/right.png";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -34,6 +35,41 @@ const rightImageY = useSpring(rightYRaw, {
   mass: 1,
 });
 
+  // Simple image component with native onLoad
+  const SimpleImage = ({ src, alt, className, loading = 'eager' }) => {
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    return (
+      <div className={`relative ${className}`}>
+        {/* Show spinner while loading */}
+        {!imageLoaded && !hasError && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <LoadingSpinner size="md" />
+          </div>
+        )}
+        
+        {/* Show error message if image fails to load */}
+        {hasError && (
+          <div className="absolute inset-0 flex items-center justify-center text-xs text-(--text-4)">
+            Image not available
+          </div>
+        )}
+        
+        {/* The actual image with native onLoad */}
+        <img
+          src={src}
+          alt={alt}
+          loading={loading}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setHasError(true)}
+          className={`w-full h-full object-cover ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transition: 'opacity 0.8s ease-in-out' }}
+        />
+      </div>
+    );
+  };
+
   const stats = [
     { icon: Users, label: "Happy Customers", value: "10K+" },
     { icon: ShoppingBag, label: "Premium Bags", value: "500+" },
@@ -57,9 +93,10 @@ const rightImageY = useSpring(rightYRaw, {
         style={{ x: leftImageX }}
         className="absolute top-1/2 -translate-y-1/2 -left-10 sm:left-0 lg:left-8 z-5"
       >
-        <img
+        <SimpleImage
           src={leftCelebration}
           alt="Left Celebration"
+          loading="eager"
           className="w-24 h-24 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-cover"
         />
       </motion.div>
@@ -68,9 +105,10 @@ const rightImageY = useSpring(rightYRaw, {
         style={{ y: rightImageY, x: rightImageX }}
         className="absolute top-1/2 -translate-y-1/2 -right-5 sm:right-0 lg:right-8 z-5"
       >
-        <img
+        <SimpleImage
           src={rightCelebration}
           alt="Right Celebration"
+          loading="eager"
           className="w-24 h-24 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-cover"
         />
       </motion.div>

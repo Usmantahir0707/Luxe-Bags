@@ -11,6 +11,7 @@ import { useShopContext } from '../context/ShopContext';
 import { productsAPI } from '../services/api';
 import { toast } from 'sonner';
 import { modalContents } from './modalContents';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function ProductPage() {
   const location = useLocation();
@@ -26,6 +27,7 @@ export default function ProductPage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [searching, setSearching] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -579,15 +581,26 @@ export default function ProductPage() {
               <Heart className={`w-5 h-5 ${isFavorite ? 'fill-(--main-1) text-(--main-1)' : 'text-(--text)'}`} />
             </button>
 
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-cover cursor-zoom-in"
-              loading="lazy"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onMouseMove={handleMouseMove}
-            />
+            <div className="relative w-full h-full">
+              {/* Show spinner while loading */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <LoadingSpinner size="xl" />
+                </div>
+              )}
+              
+              {/* The actual image with native onLoad */}
+              <img
+                src={product.image}
+                alt={product.name}
+                loading="eager"
+                onLoad={() => setImageLoaded(true)}
+                className="w-full h-full object-cover cursor-zoom-in"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onMouseMove={handleMouseMove}
+              />
+            </div>
           </motion.div>
 
           {/* Details */}

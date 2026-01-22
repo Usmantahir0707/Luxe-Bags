@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Award, Users, Heart, Shield } from "lucide-react";
 import Header from "./Header";
 import Footer from "./Footer";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function About() {
   const values = [
@@ -89,16 +90,26 @@ export default function About() {
               className="relative"
             >
               <div className="grid grid-cols-1 gap-4">
-                <img
-                  src="/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg"
-                  alt="Luxe Bags craftsmanship"
-                  className="rounded-2xl shadow-2xl w-full h-48 object-cover"
-                />
-                <img
-                  src="/assets/b1.jpg"
-                  alt="Premium materials"
-                  className="rounded-2xl shadow-2xl w-full h-48 object-cover"
-                />
+                <div className="relative rounded-2xl shadow-2xl w-full h-48">
+                  <LoadingSpinner size="lg" />
+                  <img
+                    src="/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg"
+                    alt="Luxe Bags craftsmanship"
+                    loading="lazy"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                </div>
+                <div className="relative rounded-2xl shadow-2xl w-full h-48">
+                  <LoadingSpinner size="lg" />
+                  <img
+                    src="/assets/b1.jpg"
+                    alt="Premium materials"
+                    loading="lazy"
+                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                </div>
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
             </motion.div>
@@ -149,21 +160,36 @@ export default function About() {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            <img
-              src="/src/assets/b2.jpg"
-              alt="Craftsmanship detail"
-              className="rounded-xl shadow-lg w-full h-48 object-cover"
-            />
-            <img
-              src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
-              alt="Design process"
-              className="rounded-xl shadow-lg w-full h-48 object-cover"
-            />
-            <img
-              src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
-              alt="Finished product"
-              className="rounded-xl shadow-lg w-full h-48 object-cover"
-            />
+            <div className="relative rounded-xl shadow-lg w-full h-48">
+              <LoadingSpinner size="lg" />
+              <img
+                src="/src/assets/b2.jpg"
+                alt="Craftsmanship detail"
+                loading="lazy"
+                onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
+            <div className="relative rounded-xl shadow-lg w-full h-48">
+              <LoadingSpinner size="lg" />
+              <img
+                src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
+                alt="Design process"
+                loading="lazy"
+                onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
+            <div className="relative rounded-xl shadow-lg w-full h-48">
+              <LoadingSpinner size="lg" />
+              <img
+                src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
+                alt="Finished product"
+                loading="lazy"
+                onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
           </motion.div>
         </div>
       </section>

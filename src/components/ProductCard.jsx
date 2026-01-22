@@ -4,6 +4,7 @@
 import React, { useState, forwardRef, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingBag } from 'lucide-react';
+import LoadingSpinner from './LoadingSpinner';
 
 /**
  * Props:
@@ -17,6 +18,7 @@ const ProductCard = memo(forwardRef(function ProductCard(
 ) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   function handleAddToCart(e) {
     e.stopPropagation();
@@ -39,12 +41,23 @@ const ProductCard = memo(forwardRef(function ProductCard(
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-(--main-1)/10 to-transparent rounded-full -translate-y-16 translate-x-16" />
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-(--main-2)/8 to-transparent rounded-full translate-y-12 -translate-x-12" />
 
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
-        />
+        <div className="relative w-full h-full">
+          {/* Show spinner while loading */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <LoadingSpinner size="lg" />
+            </div>
+          )}
+          
+          {/* The actual image with native onLoad */}
+          <img
+            src={image}
+            alt={name}
+            loading="lazy"
+            onLoad={() => setImageLoaded(true)}
+            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+          />
+        </div>
 
         {/* Favorite button - repositioned */}
         <motion.button
