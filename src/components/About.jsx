@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
 import { Award, Users, Heart, Shield } from "lucide-react";
+import b1 from "../assets/b1.jpg";
+import b2 from "../assets/b2.jpg";
+import image2c0e37b7 from "../assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg";
+import imageb803d73a from "../assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg";
+import image9d34577a from "../assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg";
 import Header from "./Header";
 import Footer from "./Footer";
 import LoadingSpinner from "./LoadingSpinner";
@@ -93,7 +98,7 @@ export default function About() {
                 <div className="relative rounded-2xl shadow-2xl w-full h-48">
                   <LoadingSpinner size="lg" />
                   <img
-                    src="/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg"
+                    src={image2c0e37b7}
                     alt="Luxe Bags craftsmanship"
                     loading="lazy"
                     onLoad={(e) => e.target.parentElement.classList.add('loaded')}
@@ -103,7 +108,7 @@ export default function About() {
                 <div className="relative rounded-2xl shadow-2xl w-full h-48">
                   <LoadingSpinner size="lg" />
                   <img
-                    src="/assets/b1.jpg"
+                    src={b1}
                     alt="Premium materials"
                     loading="lazy"
                     onLoad={(e) => e.target.parentElement.classList.add('loaded')}
@@ -163,7 +168,7 @@ export default function About() {
             <div className="relative rounded-xl shadow-lg w-full h-48">
               <LoadingSpinner size="lg" />
               <img
-                src="/src/assets/b2.jpg"
+                src={b2}
                 alt="Craftsmanship detail"
                 loading="lazy"
                 onLoad={(e) => e.target.parentElement.classList.add('loaded')}
@@ -173,7 +178,7 @@ export default function About() {
             <div className="relative rounded-xl shadow-lg w-full h-48">
               <LoadingSpinner size="lg" />
               <img
-                src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg"
+                src={imageb803d73a}
                 alt="Design process"
                 loading="lazy"
                 onLoad={(e) => e.target.parentElement.classList.add('loaded')}
@@ -183,7 +188,7 @@ export default function About() {
             <div className="relative rounded-xl shadow-lg w-full h-48">
               <LoadingSpinner size="lg" />
               <img
-                src="/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg"
+                src={image9d34577a}
                 alt="Finished product"
                 loading="lazy"
                 onLoad={(e) => e.target.parentElement.classList.add('loaded')}

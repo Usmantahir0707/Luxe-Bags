@@ -2,6 +2,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import b1 from "../assets/b1.jpg";
+import b2 from "../assets/b2.jpg";
+import image2c0e37b7 from "../assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg";
+import imageb803d73a from "../assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg";
+import image6373b0af from "../assets/WhatsApp Image 2025-11-23 at 00.24.46_6373b0af.jpg";
+import image9d34577a from "../assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg";
 import ProductCard from "./ProductCard";
 import Footer from "./Footer";
 import Toaster from "./ui/Toaster";
@@ -30,12 +36,12 @@ function useDebounce(value, delay) {
 }
 
 const shopCategories = [
-  { name: 'Handbags', href: '/shop/handbag', image: '/src/assets/b1.jpg' },
-  { name: 'Shoulder Bags', href: '/shop/shoulder', image: '/src/assets/b2.jpg' },
-  { name: 'Tote Bags', href: '/shop/tote', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg' },
-  { name: 'Crossbody Bags', href: '/shop/crossbody', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg' },
-  { name: 'Clutches', href: '/shop/clutch', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.46_6373b0af.jpg' },
-  { name: 'Backpacks', href: '/shop/backpack', image: '/src/assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg' },
+  { name: 'Handbags', href: '/shop/handbag', image: b1 },
+  { name: 'Shoulder Bags', href: '/shop/shoulder', image: b2 },
+  { name: 'Tote Bags', href: '/shop/tote', image: image2c0e37b7 },
+  { name: 'Crossbody Bags', href: '/shop/crossbody', image: imageb803d73a },
+  { name: 'Clutches', href: '/shop/clutch', image: image6373b0af },
+  { name: 'Backpacks', href: '/shop/backpack', image: image9d34577a },
 ];
 
 export default function Home() {

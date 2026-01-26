@@ -35,8 +35,8 @@ const rightImageY = useSpring(rightYRaw, {
   mass: 1,
 });
 
-  // Simple image component with native onLoad
-  const SimpleImage = ({ src, alt, className, loading = 'eager' }) => {
+  // Simple image component with framer-motion opacity animation
+  const SimpleImage = ({ src, alt, className }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
 
@@ -56,15 +56,16 @@ const rightImageY = useSpring(rightYRaw, {
           </div>
         )}
         
-        {/* The actual image with native onLoad */}
-        <img
+        {/* The actual image with framer-motion opacity animation */}
+        <motion.img
           src={src}
           alt={alt}
-          loading={loading}
           onLoad={() => setImageLoaded(true)}
           onError={() => setHasError(true)}
-          className={`w-full h-full object-cover ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-          style={{ transition: 'opacity 0.8s ease-in-out' }}
+          initial={{ opacity: 0 }}
+          animate={imageLoaded ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className={`w-full h-full object-cover`}
         />
       </div>
     );
@@ -82,8 +83,8 @@ const rightImageY = useSpring(rightYRaw, {
       {/* Simple background pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          backgroundSize: '60px 60px'
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width=\'60\\' height=\'60\\' viewBox=\'0 0 60 60\\' xmlns=\'http://www.w3.org/2000/svg\\'%3E%3Cg fill=\'none\\' fill-rule=\'evenodd\\'%3E%3Cg fill=\'%23000000\\' fill-opacity=\'0.4\\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: "60px 60px"
         }} />
       </div>
 
@@ -96,7 +97,6 @@ const rightImageY = useSpring(rightYRaw, {
         <SimpleImage
           src={leftCelebration}
           alt="Left Celebration"
-          loading="eager"
           className="w-24 h-24 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-cover"
         />
       </motion.div>
@@ -108,7 +108,6 @@ const rightImageY = useSpring(rightYRaw, {
         <SimpleImage
           src={rightCelebration}
           alt="Right Celebration"
-          loading="eager"
           className="w-24 h-24 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-cover"
         />
       </motion.div>
@@ -178,7 +177,7 @@ const rightImageY = useSpring(rightYRaw, {
           <motion.button
             whileHover={{ scale: 1.08, boxShadow: "0 10px 25px rgba(0,0,0,0.3)" }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById("products")?.scrollIntoView({ behavior: "smooth" })}
             className="px-10 py-4 bg-gradient-to-r from-(--main-1) via-(--main-2) to-(--main-1) text-(--text) font-bold text-lg border-2 border-(--main-1) rounded-full hover:opacity-90 hover:text-(--text-6) transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Shop Now
