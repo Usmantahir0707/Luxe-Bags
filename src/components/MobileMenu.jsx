@@ -62,13 +62,15 @@ export default function MobileMenu({ isOpen, onClose }) {
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold text-(--text)">Menu</h2>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="p-2 text-(--text-4) hover:text-(--text) hover:bg-(--base-2) rounded-lg transition-colors"
+                  className="w-10 h-10 rounded-full bg-(--base-3) flex items-center justify-center text-zinc-400 hover:text-(--text) hover:bg-(--base-4) transition-colors"
                   aria-label="Close menu"
                 >
                   <X className="w-6 h-6" />
-                </button>
+                </motion.button>
               </div>
 
               {/* Menu Items */}
@@ -237,16 +239,18 @@ export default function MobileMenu({ isOpen, onClose }) {
                   
                 </button>
                 <h2 className="text-xl font-bold text-(--text)">Shop Categories</h2>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => {
                     setShowShopCategories(false);
                     onClose();
                   }}
-                  className="p-2 text-(--text-4) hover:text-(--text) hover:bg-(--base-2) rounded-lg transition-colors"
+                  className="w-10 h-10 rounded-full bg-(--base-3) flex items-center justify-center text-zinc-400 hover:text-(--text) hover:bg-(--base-4) transition-colors"
                   aria-label="Close menu"
                 >
                   <X className="w-6 h-6" />
-                </button>
+                </motion.button>
               </div>
 
               {/* Shop Categories List */}

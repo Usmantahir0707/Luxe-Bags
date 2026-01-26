@@ -230,10 +230,10 @@ export default function ProductPage() {
                     </motion.button>
                   )}
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setSearching(false)}
-                    className="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                    className="ml-2 w-10 h-10 rounded-full bg-(--base-2) flex items-center justify-center text-zinc-400 hover:text-(--text) hover:bg-(--base-3) transition-colors"
                   >
                     <X className="w-5 h-5 text-gray-500" />
                   </motion.button>
@@ -445,10 +445,10 @@ export default function ProductPage() {
                   </motion.button>
                 )}
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setSearching(false)}
-                  className="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                  className="ml-2 w-10 h-10 rounded-full bg-(--base-2) flex items-center justify-center text-zinc-400 hover:text-(--text) hover:bg-(--base-3) transition-colors"
                 >
                   <X className="w-5 h-5 text-(--text-3)" />
                 </motion.button>
@@ -849,13 +849,15 @@ export default function ProductPage() {
               <h2 id="modal-title" className="text-xl font-semibold text-(--text)">
                 {modalContent.title}
               </h2>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={closeModal}
-                className="p-2 rounded-full hover:bg-(--base-2) transition-colors"
+                className="w-8 h-8 rounded-full bg-(--base-3) flex items-center justify-center text-zinc-400 hover:text-(--text) hover:bg-(--base-4) transition-colors"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-(--text)" />
-              </button>
+              </motion.button>
             </div>
 
             {/* Modal Content */}

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Award, Users, Heart, Shield } from "lucide-react";
 import b1 from "../assets/b1.jpg";
 import b2 from "../assets/b2.jpg";
@@ -10,6 +11,18 @@ import Footer from "./Footer";
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function About() {
+  // State to track image loading status
+  const [imageLoaded, setImageLoaded] = useState({
+    story1: false,
+    story2: false,
+    showcase1: false,
+    showcase2: false,
+    showcase3: false
+  });
+
+  const handleImageLoad = (imageName) => {
+    setImageLoaded(prev => ({ ...prev, [imageName]: true }));
+  };
   const values = [
     {
       icon: Award,
@@ -96,22 +109,22 @@ export default function About() {
             >
               <div className="grid grid-cols-1 gap-4">
                 <div className="relative rounded-2xl shadow-2xl w-full h-48">
-                  <LoadingSpinner size="lg" />
+                  {!imageLoaded.story1 && <LoadingSpinner size="lg" />}
                   <img
                     src={image2c0e37b7}
                     alt="Luxe Bags craftsmanship"
                     loading="lazy"
-                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                    onLoad={() => handleImageLoad('story1')}
                     className="w-full h-full object-cover rounded-2xl"
                   />
                 </div>
                 <div className="relative rounded-2xl shadow-2xl w-full h-48">
-                  <LoadingSpinner size="lg" />
+                  {!imageLoaded.story2 && <LoadingSpinner size="lg" />}
                   <img
                     src={b1}
                     alt="Premium materials"
                     loading="lazy"
-                    onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                    onLoad={() => handleImageLoad('story2')}
                     className="w-full h-full object-cover rounded-2xl"
                   />
                 </div>
@@ -166,32 +179,32 @@ export default function About() {
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             <div className="relative rounded-xl shadow-lg w-full h-48">
-              <LoadingSpinner size="lg" />
+              {!imageLoaded.showcase1 && <LoadingSpinner size="lg" />}
               <img
                 src={b2}
                 alt="Craftsmanship detail"
                 loading="lazy"
-                onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                onLoad={() => handleImageLoad('showcase1')}
                 className="w-full h-full object-cover rounded-xl"
               />
             </div>
             <div className="relative rounded-xl shadow-lg w-full h-48">
-              <LoadingSpinner size="lg" />
+              {!imageLoaded.showcase2 && <LoadingSpinner size="lg" />}
               <img
                 src={imageb803d73a}
                 alt="Design process"
                 loading="lazy"
-                onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                onLoad={() => handleImageLoad('showcase2')}
                 className="w-full h-full object-cover rounded-xl"
               />
             </div>
             <div className="relative rounded-xl shadow-lg w-full h-48">
-              <LoadingSpinner size="lg" />
+              {!imageLoaded.showcase3 && <LoadingSpinner size="lg" />}
               <img
                 src={image9d34577a}
                 alt="Finished product"
                 loading="lazy"
-                onLoad={(e) => e.target.parentElement.classList.add('loaded')}
+                onLoad={() => handleImageLoad('showcase3')}
                 className="w-full h-full object-cover rounded-xl"
               />
             </div>

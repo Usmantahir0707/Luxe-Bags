@@ -57,7 +57,14 @@ export default function CartDrawer({ isOpen, onClose = () => {}, items = [], onU
           >
             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
               <h3 className="text-(--text) text-lg">Your Cart</h3>
-              <button onClick={onClose} className="p-2 rounded-full bg-(--base-3) text-zinc-300 hover:text-(--text)"><X className="w-5 h-5" /></button>
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={onClose}
+                className="w-8 h-8 rounded-full bg-(--base-3) flex items-center justify-center text-zinc-400 hover:text-(--text) hover:bg-(--base-4) transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </motion.button>
             </div>
 
             <div className="p-4 overflow-y-auto max-h-[calc(100vh-220px)]">

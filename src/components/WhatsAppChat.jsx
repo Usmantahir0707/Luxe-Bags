@@ -84,12 +84,12 @@ export default function WhatsAppChat() {
                   </div>
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setIsOpen(false)}
-                  className="w-6 h-6 rounded-full bg-green-600 hover:bg-green-700 flex items-center justify-center"
+                  className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white hover:bg-green-700 transition-colors"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </motion.button>
               </div>
 
