@@ -84,7 +84,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
+    <section className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
       {/* Simple background pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
@@ -97,7 +97,7 @@ export default function Hero() {
       {/* Mobile: Create gap and adjust positioning, Desktop: Keep original layout */}
       <motion.div
         style={{ x: leftImageX }}
-        className="absolute top-1/2 -translate-y-1/2 -left-10 sm:left-0 lg:left-8 z-5"
+        className="absolute top-1/2 -translate-y-1/2 left-10 sm:left-0 lg:left-8 z-5"
       >
         <SimpleImage
           src={leftCelebration}
@@ -108,7 +108,7 @@ export default function Hero() {
 
       <motion.div
         style={{ y: rightImageY, x: rightImageX }}
-        className="absolute top-1/2 -translate-y-1/2 -right-5 sm:right-0 lg:right-8 z-5"
+        className="absolute top-1/2 -translate-y-1/2 right-10 sm:right-0 lg:right-8 z-5"
       >
         <SimpleImage
           src={rightCelebration}
@@ -122,9 +122,10 @@ export default function Hero() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+        className="relative flex flex-col gap-15 sm:gap-0 items-center z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
       >
-        {/* Premium Badge */}
+        <div>
+          {/* Premium Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -160,13 +161,15 @@ export default function Hero() {
              <Balloon options={{ maxX: 40, maxY: 32, maxRotation: 16 }} className="absolute -bottom-3 left-8 w-3 h-3 bg-rose-500 rounded-full"></Balloon>
           </span>
         </motion.h1>
+        </div>
+        
 
         {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.4 }}
-          className="text-lg sm:text-xl text-(--text-4) mb-12 max-w-2xl mx-auto"
+          className="text-lg sm:text-xl text-(--text-4) mt-15 sm:mt-0 sm:mb-12 max-w-2xl mx-auto"
         >
            Save big on timeless elegance!
         </motion.p>
