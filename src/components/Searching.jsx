@@ -1,8 +1,34 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, RotateCcw } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 
 function Searching({ searching, setSearching, searchValue, setSearchValue, suggestions, handleSearch }) {
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
+
+  // Debounce search input to prevent excessive state updates
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+    }, 300); // 300ms debounce delay
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchValue]);
+
+  // Memoized search handler to prevent unnecessary re-renders
+  const handleDebouncedSearch = useCallback(() => {
+    if (debouncedSearchValue.trim()) {
+      handleSearch(debouncedSearchValue.trim());
+    }
+  }, [debouncedSearchValue, handleSearch]);
+
+  // Memoized suggestion handler
+  const handleSuggestionClick = useCallback((item) => {
+    setSearchValue(item);
+    handleSearch(item);
+  }, [setSearchValue, handleSearch]);
 
   return (
     <AnimatePresence>
@@ -31,7 +57,7 @@ function Searching({ searching, setSearching, searchValue, setSearchValue, sugge
                   placeholder="Search bags..."
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleDebouncedSearch(); }}
                   className="flex-1 text-(--text-6) placeholder-(--text-3) outline-none focus:outline-none focus:ring-0 text-lg"
                   autoFocus
                 />
@@ -79,7 +105,7 @@ function Searching({ searching, setSearching, searchValue, setSearchValue, sugge
                         transition={{ duration: 0.2, delay: index * 0.05 }}
                         whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => { setSearchValue(item); handleSearch(item); }}
+                        onClick={() => handleSuggestionClick(item)}
                         className="p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
                       >
                         {item}
@@ -106,7 +132,7 @@ function Searching({ searching, setSearching, searchValue, setSearchValue, sugge
                         transition={{ duration: 0.2, delay: index * 0.05 }}
                         whileHover={{ x: 4, backgroundColor: "#f3f4f6" }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => { setSearchValue(item); handleSearch(); }}
+                        onClick={() => handleSuggestionClick(item)}
                         className="w-full p-3 text-left bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-(--text-5) font-medium"
                       >
                         {item}

@@ -589,11 +589,13 @@ export default function ProductPage() {
                 </div>
               )}
               
-              {/* The actual image with native onLoad */}
+              {/* The actual image with optimized loading */}
               <img
                 src={product.image}
                 alt={product.name}
                 loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 onLoad={() => setImageLoaded(true)}
                 className="w-full h-full object-cover cursor-zoom-in"
                 onMouseEnter={handleMouseEnter}
@@ -726,12 +728,7 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Sample Reviews */}
           {[
-            {
-              name: "Sarah Johnson",
-              rating: 5,
-              comment: "Absolutely love this bag! The quality is outstanding and it matches perfectly with my style.",
-              date: "2 weeks ago"
-            },
+
             {
               name: "Mike Chen",
               rating: 5,

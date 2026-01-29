@@ -1,11 +1,13 @@
 import './App.css'
 import { Outlet, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom'
+import { useCallback } from 'react'
 import { ShopContextProvider, useShopContext } from './context/ShopContext'
 import { ThemeProvider } from './context/ThemeContext'
 import LoginModal from './components/LoginModal'
 import CartDrawer from './components/CartDrawer'
 import Searching from './components/Searching'
 import Toaster from './components/ui/Toaster'
+import ImagePreloader from './components/ImagePreloader'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import Lenis from 'lenis'
@@ -53,7 +55,7 @@ function AppContent() {
 
   const mostSearched = ["Handbags", "Backpacks", "Tote Bags", "Wallets", "Clutches", "Crossbody Bags"];
 
-  const handleSearch = (customQuery = null) => {
+  const handleSearch = useCallback((customQuery = null) => {
     const queryToUse = customQuery || searchValue;
     if (!queryToUse?.trim()) {
       toast.info("Please enter a search term");
@@ -61,7 +63,7 @@ function AppContent() {
     }
     setSearching(false);
     navigate('/search-result', { state: { query: queryToUse.trim() } });
-  };
+  }, [searchValue, setSearching, navigate]);
 
   /* -------------------- LENIS SETUP -------------------- */
   useEffect(() => {
@@ -121,9 +123,24 @@ function AppContent() {
     // For now, just close the cart
   };
 
+  // Critical images to preload for better perceived performance
+  const criticalImages = [
+    '/src/assets/left.png',
+    '/src/assets/right.png',
+    '/src/assets/b1.jpg',
+    '/src/assets/b2.jpg'
+  ];
+
   return (
     <>
     <ScrollRestoration />
+    <ImagePreloader 
+      images={criticalImages} 
+      onPreloadComplete={() => {
+        // Optional: Add any post-preload logic here
+        console.log('Critical images preloaded');
+      }}
+    />
     <Searching
       searching={searching}
       setSearching={setSearching}

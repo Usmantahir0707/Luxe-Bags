@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { authAPI, authUtils } from "../services/api";
 import { toast } from "sonner";
 
@@ -11,7 +11,10 @@ export function ShopContextProvider({ children }) {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  const total = cartItems.reduce((s, it) => s + it.price * it.quantity, 0);
+  // Memoize total calculation to prevent unnecessary recalculations
+  const total = useMemo(() => {
+    return cartItems.reduce((s, it) => s + it.price * it.quantity, 0);
+  }, [cartItems]);
 
   const [orderForm, setOrderForm] = useState({
     customerName: "",
@@ -43,7 +46,10 @@ export function ShopContextProvider({ children }) {
   const [loginLoading, setLoginLoading] = useState(false);
   const [registerLoading, setRegisterLoading] = useState(false);
 
-  const totalItems = cartItems.reduce((s, i) => s + i.quantity, 0);
+  // Memoize totalItems calculation
+  const totalItems = useMemo(() => {
+    return cartItems.reduce((s, i) => s + i.quantity, 0);
+  }, [cartItems]);
 
   // Persist cart to localStorage whenever it changes
   useEffect(() => {
@@ -68,8 +74,8 @@ export function ShopContextProvider({ children }) {
     checkAuth();
   }, []);
 
-  // Authentication functions
-  const login = async (credentials) => {
+  // Memoized authentication functions to prevent unnecessary re-renders
+  const login = useCallback(async (credentials) => {
     setLoginLoading(true);
     try {
       const response = await authAPI.login(credentials);
@@ -98,9 +104,9 @@ export function ShopContextProvider({ children }) {
     } finally {
       setLoginLoading(false);
     }
-  };
+  }, []);
 
-  const register = async (userData) => {
+  const register = useCallback(async (userData) => {
     setRegisterLoading(true);
     try {
       const response = await authAPI.register(userData);
@@ -116,16 +122,16 @@ export function ShopContextProvider({ children }) {
     } finally {
       setRegisterLoading(false);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     authUtils.logout();
     setUser(null);
     setShowAccountMenu(false);
     toast.success("Logged out successfully");
-  };
+  }, []);
 
-  const updateUser = async (userData) => {
+  const updateUser = useCallback(async (userData) => {
     try {
       const response = await authAPI.updateUser(userData);
       setUser(response.user || response);
@@ -142,9 +148,9 @@ export function ShopContextProvider({ children }) {
       });
       return { success: false, error: error.message };
     }
-  };
+  }, []);
 
-  const deleteUser = async () => {
+  const deleteUser = useCallback(async () => {
     try {
       await authAPI.deleteUser();
       // Clear user data and logout
@@ -159,10 +165,10 @@ export function ShopContextProvider({ children }) {
       });
       return { success: false, error: error.message };
     }
-  };
+  }, []);
 
-  // Cart functions
-  const addToCart = (product, quantity = 1, selectedColor = null, selectedSize = null) => {
+  // Memoized cart functions to prevent unnecessary re-renders
+  const addToCart = useCallback((product, quantity = 1, selectedColor = null, selectedSize = null) => {
     setCartItems(prev => {
       // Normalize empty strings to null for consistent matching
       const normalizedColor = selectedColor === '' ? null : selectedColor;
@@ -224,9 +230,9 @@ export function ShopContextProvider({ children }) {
         size: normalizedSize,
       }];
     });
-  };
+  }, []);
 
-  const updateCartItemQuantity = (id, quantity, color = null, size = null) => {
+  const updateCartItemQuantity = useCallback((id, quantity, color = null, size = null) => {
     setCartItems(prev =>
       prev.map(item =>
         item.id === id && item.color === color && item.size === size
@@ -234,9 +240,9 @@ export function ShopContextProvider({ children }) {
           : item
       )
     );
-  };
+  }, []);
 
-  const removeFromCart = (id, color = null, size = null) => {
+  const removeFromCart = useCallback((id, color = null, size = null) => {
     const item = cartItems.find(item =>
       item.id === id &&
       item.color === color &&
@@ -251,58 +257,83 @@ export function ShopContextProvider({ children }) {
           item.size === size)
       ));
     }
-  };
+  }, [cartItems]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
     toast.info("Cart cleared");
-  };
+  }, []);
+
+  // Memoize the context value to prevent unnecessary re-renders of consumers
+  const contextValue = useMemo(() => ({
+    // Cart
+    cartItems,
+    total,
+    totalItems,
+    addToCart,
+    updateCartItemQuantity,
+    removeFromCart,
+    clearCart,
+
+    // Order
+    orderForm,
+    setOrderForm,
+
+    // Auth
+    user,
+    setUser,
+    login,
+    register,
+    logout,
+    updateUser,
+    deleteUser,
+    authLoading,
+    loginLoading,
+    registerLoading,
+
+    // UI states
+    showAccountMenu,
+    setShowAccountMenu,
+    isLoginModalOpen,
+    setIsLoginModalOpen,
+    searching,
+    setSearching,
+    isCartOpen,
+    setIsCartOpen,
+
+    // Search
+    searchValue,
+    setSearchValue,
+    suggestions,
+    setSuggestions,
+  }), [
+    cartItems,
+    total,
+    totalItems,
+    addToCart,
+    updateCartItemQuantity,
+    removeFromCart,
+    clearCart,
+    orderForm,
+    user,
+    login,
+    register,
+    logout,
+    updateUser,
+    deleteUser,
+    authLoading,
+    loginLoading,
+    registerLoading,
+    showAccountMenu,
+    isLoginModalOpen,
+    searching,
+    isCartOpen,
+    searchValue,
+    suggestions,
+  ]);
 
   return (
-    <ShopContext.Provider
-      value={{
-        // Cart
-        cartItems,
-        total,
-        totalItems,
-        addToCart,
-        updateCartItemQuantity,
-        removeFromCart,
-        clearCart,
-
-        // Order
-        orderForm,
-        setOrderForm,
-
-        // Auth
-        user,
-        setUser,
-        login,
-        register,
-        logout,
-        updateUser,
-        deleteUser,
-        authLoading,
-        loginLoading,
-        registerLoading,
-
-        // UI states
-        showAccountMenu,
-        setShowAccountMenu,
-        isLoginModalOpen,
-        setIsLoginModalOpen,
-        searching,
-        setSearching,
-        isCartOpen,
-        setIsCartOpen,
-
-        // Search
-        searchValue,
-        setSearchValue,
-        suggestions,
-        setSuggestions,
-      }}
-    >
+    <ShopContext.Provider value={contextValue}>
       {children}
     </ShopContext.Provider>
   );

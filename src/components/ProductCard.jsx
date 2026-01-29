@@ -49,11 +49,13 @@ const ProductCard = memo(forwardRef(function ProductCard(
             </div>
           )}
           
-          {/* The actual image with native onLoad */}
+          {/* The actual image with native onLoad and optimized loading */}
           <img
             src={image}
             alt={name}
             loading="lazy"
+            decoding="async"
+            fetchPriority="low"
             onLoad={() => setImageLoaded(true)}
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
           />

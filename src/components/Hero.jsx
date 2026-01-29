@@ -10,30 +10,32 @@ import LoadingSpinner from "./LoadingSpinner";
 export default function Hero() {
   const navigate = useNavigate();
 
-  // Scroll-based animations for image elements
- const { scrollYProgress } = useScroll();
+  // Optimized scroll-based animations for image elements
+  const { scrollYProgress } = useScroll();
 
-const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -2000]);
-const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 2000]);
-const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 250]);
+  // Use more conservative transform ranges to reduce performance impact
+  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -800]);
+  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 800]);
+  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
-const leftImageX = useSpring(leftXRaw, {
-  stiffness: 60,
-  damping: 20,
-  mass: 1,
-});
+  // Use more performant spring settings
+  const leftImageX = useSpring(leftXRaw, {
+    stiffness: 100,
+    damping: 30,
+    mass: 0.5,
+  });
 
-const rightImageX = useSpring(rightXRaw, {
-  stiffness: 60,
-  damping: 20,
-  mass: 1,
-});
+  const rightImageX = useSpring(rightXRaw, {
+    stiffness: 100,
+    damping: 30,
+    mass: 0.5,
+  });
 
-const rightImageY = useSpring(rightYRaw, {
-  stiffness: 70,
-  damping: 20,
-  mass: 1,
-});
+  const rightImageY = useSpring(rightYRaw, {
+    stiffness: 120,
+    damping: 30,
+    mass: 0.5,
+  });
 
   // Simple image component with framer-motion opacity animation
   const SimpleImage = ({ src, alt, className }) => {
@@ -56,10 +58,13 @@ const rightImageY = useSpring(rightYRaw, {
           </div>
         )}
         
-        {/* The actual image with framer-motion opacity animation */}
+        {/* The actual image with optimized loading and framer-motion opacity animation */}
         <motion.img
           src={src}
           alt={alt}
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
           onLoad={() => setImageLoaded(true)}
           onError={() => setHasError(true)}
           initial={{ opacity: 0 }}
