@@ -1,16 +1,20 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, memo, useEffect } from "react";
+import { useState, memo, useEffect, useRef } from "react";
 import leftCelebration from "../assets/left.png";
 import rightCelebration from "../assets/right.png";
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function Hero() {
   const navigate = useNavigate();
+  const containerRef = useRef(null);
 
   // Optimized scroll-based animations for image elements
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
 
   // Optimized transform ranges for a buttery smooth experience
   // Using lower values for mobile to keep it responsive
@@ -72,7 +76,7 @@ export default function Hero() {
   ));
 
   return (
-    <section className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
+    <section ref={containerRef} className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
       {/* Simple background pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{
