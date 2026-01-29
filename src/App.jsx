@@ -7,7 +7,7 @@ import LoginModal from './components/LoginModal'
 import CartDrawer from './components/CartDrawer'
 import Searching from './components/Searching'
 import Toaster from './components/ui/Toaster'
-import ImagePreloader from './components/ImagePreloader'
+// ImagePreloader removed - using optimized native lazy loading instead
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 import Lenis from 'lenis'
@@ -123,24 +123,9 @@ function AppContent() {
     // For now, just close the cart
   };
 
-  // Critical images to preload for better perceived performance
-  const criticalImages = [
-    '/src/assets/left.png',
-    '/src/assets/right.png',
-    '/src/assets/b1.jpg',
-    '/src/assets/b2.jpg'
-  ];
-
   return (
     <>
     <ScrollRestoration />
-    <ImagePreloader 
-      images={criticalImages} 
-      onPreloadComplete={() => {
-        // Optional: Add any post-preload logic here
-        console.log('Critical images preloaded');
-      }}
-    />
     <Searching
       searching={searching}
       setSearching={setSearching}

@@ -2,12 +2,13 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import b1 from "../assets/b1.jpg";
-import b2 from "../assets/b2.jpg";
-import image2c0e37b7 from "../assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg";
-import imageb803d73a from "../assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg";
-import image6373b0af from "../assets/WhatsApp Image 2025-11-23 at 00.24.46_6373b0af.jpg";
-import image9d34577a from "../assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg";
+// Lazy load category images - reduces initial bundle
+const b1 = new URL("../assets/b1.jpg", import.meta.url).href;
+const b2 = new URL("../assets/b2.jpg", import.meta.url).href;
+const image2c0e37b7 = new URL("../assets/WhatsApp Image 2025-11-23 at 00.24.44_2c0e37b7.jpg", import.meta.url).href;
+const imageb803d73a = new URL("../assets/WhatsApp Image 2025-11-23 at 00.24.44_b803d73a.jpg", import.meta.url).href;
+const image6373b0af = new URL("../assets/WhatsApp Image 2025-11-23 at 00.24.46_6373b0af.jpg", import.meta.url).href;
+const image9d34577a = new URL("../assets/WhatsApp Image 2025-11-23 at 00.24.47_9d34577a.jpg", import.meta.url).href;
 import ProductCard from "./ProductCard";
 import Footer from "./Footer";
 import Toaster from "./ui/Toaster";
@@ -46,12 +47,11 @@ const shopCategories = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const { cartItems, setCartItems, orderForm, setOrderForm, addToCart, updateCartItemQuantity, removeFromCart } = useShopContext();
+  const { cartItems, addToCart, updateCartItemQuantity, removeFromCart } = useShopContext();
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentView, setCurrentView] = useState("shop"); // shop | checkout | payment | success
+  const [currentView, setCurrentView] = useState("shop");
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const productsPerPage = 12;
 
   // Getting product data

@@ -2,8 +2,6 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import './index.css';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 // Lazy load components
 const App = lazy(() => import('./App.jsx'))

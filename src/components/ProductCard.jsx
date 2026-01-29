@@ -56,6 +56,8 @@ const ProductCard = memo(forwardRef(function ProductCard(
             loading="lazy"
             decoding="async"
             fetchPriority="low"
+            width="400"
+            height="400"
             onLoad={() => setImageLoaded(true)}
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
           />
