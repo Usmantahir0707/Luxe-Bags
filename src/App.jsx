@@ -67,22 +67,34 @@ function AppContent() {
 
   /* -------------------- LENIS SETUP -------------------- */
   useEffect(() => {
-    // Initialize Lenis for smooth scrolling on all devices
+    // Detect if device is touch-enabled
+    const isTouchDevice = () => {
+      return (('ontouchstart' in window) ||
+              (navigator.maxTouchPoints > 0) ||
+              (navigator.msMaxTouchPoints > 0));
+    };
+
+    // Initialize Lenis for smooth scrolling
     const lenis = new Lenis({
       smooth: true,
-      smoothTouch: true, // Enable smooth scrolling on mobile devices
-      lerp: 0.08, // Lerp value for smooth scrolling
+      smoothTouch: isTouchDevice(), // Only enable on actual touch devices
+      lerp: 0.06, // Reduced from 0.08 for better performance
+      syncTouch: true,
+      touchMultiplier: 2,
     });
 
+    let animationFrameId;
+    
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      animationFrameId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    animationFrameId = requestAnimationFrame(raf);
 
     // Cleanup on unmount
     return () => {
+      cancelAnimationFrame(animationFrameId);
       lenis.destroy();
     };
   }, []);

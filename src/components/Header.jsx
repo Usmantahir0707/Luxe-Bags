@@ -53,7 +53,7 @@ const ShopCategoryItem = memo(({ category, index, onClick }) => {
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.02, duration: 0.15 }}
     >
       <Link
         to={category.href}

@@ -1,6 +1,6 @@
 // src/components/Home.jsx
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 // Lazy load category images - reduces initial bundle
 const b1 = new URL("../assets/b1.jpg", import.meta.url).href;
@@ -159,6 +159,8 @@ export default function Home() {
                         src={category.image}
                         alt={category.name}
                         loading="lazy" /* Added lazy loading for category images */
+                        width="96"
+                        height="96"
                         className="w-full h-full object-cover rounded-full"
                       />
                     </div>
@@ -198,23 +200,21 @@ export default function Home() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
-                <AnimatePresence>
-                  {products.filter(product => product.isFeatured).slice(0, 6).map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      id={product._id}
-                      name={product.name}
-                      price={product.price}
-                      image={product.image}
-                      category={product.category}
-                      onQuickView={(id) => {
-                        const p = products.find((x) => x._id === id);
-                        if (p) navigate('/product-page', { state: { product: p } });
-                      }}
-                      onAddToCart={handleAddToCart}
-                    />
-                  ))}
-                </AnimatePresence>
+                {products.filter(product => product.isFeatured).slice(0, 6).map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    id={product._id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    category={product.category}
+                    onQuickView={(id) => {
+                      const p = products.find((x) => x._id === id);
+                      if (p) navigate('/product-page', { state: { product: p } });
+                    }}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))}
               </div>
 
               <motion.button
@@ -240,23 +240,21 @@ export default function Home() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-12">
-                <AnimatePresence>
-                  {products.slice(0, 6).map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      id={product._id}
-                      name={product.name}
-                      price={product.price}
-                      image={product.image}
-                      category={product.category}
-                      onQuickView={(id) => {
-                        const p = products.find((x) => x._id === id);
-                        if (p) navigate('/product-page', { state: { product: p } });
-                      }}
-                      onAddToCart={handleAddToCart}
-                    />
-                  ))}
-                </AnimatePresence>
+                {products.slice(0, 6).map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    id={product._id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    category={product.category}
+                    onQuickView={(id) => {
+                      const p = products.find((x) => x._id === id);
+                      if (p) navigate('/product-page', { state: { product: p } });
+                    }}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))}
               </div>
 
               <motion.button
@@ -274,24 +272,22 @@ export default function Home() {
           {/* Products Grid */}
           <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14">
-              <AnimatePresence>
-                {currentProducts.length > 0 &&
-                  currentProducts.map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      id={product._id}
-                      name={product.name}
-                      price={product.price}
-                      image={product.image}
-                      category={product.category}
-                      onQuickView={(id) => {
-                        const p = products.find((x) => x._id === id);
-                        if (p) navigate('/product-page', { state: { product: p } });
-                      }}
-                      onAddToCart={handleAddToCart}
-                    />
-                  ))}
-              </AnimatePresence>
+              {currentProducts.length > 0 &&
+                currentProducts.map((product) => (
+                  <ProductCard
+                    key={product._id}
+                    id={product._id}
+                    name={product.name}
+                    price={product.price}
+                    image={product.image}
+                    category={product.category}
+                    onQuickView={(id) => {
+                      const p = products.find((x) => x._id === id);
+                      if (p) navigate('/product-page', { state: { product: p } });
+                    }}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))}
             </motion.div>
 
             {filteredProducts.length === 0 && (

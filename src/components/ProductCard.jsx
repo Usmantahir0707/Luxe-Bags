@@ -1,8 +1,7 @@
 // src/components/ProductCard.jsx
-// Single-file production-ready ProductCard component (JSX + Tailwind + Framer Motion)
+// Single-file production-ready ProductCard component (JSX + Tailwind + CSS transitions)
 // Usage: <ProductCard {...props} />
 import React, { useState, forwardRef, memo } from 'react';
-import { motion } from 'framer-motion';
 import { Heart, ShoppingBag } from 'lucide-react';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -61,16 +60,14 @@ const ProductCard = memo(forwardRef(function ProductCard(
         </div>
 
         {/* Favorite button - repositioned */}
-        <motion.button
+        <button
           onClick={(e) => { e.stopPropagation(); setIsFavorite(prev => !prev); }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="absolute top-3 right-3 w-9 h-9 bg-(--base-2)/90 rounded-xl flex items-center justify-center shadow-lg border border-(--base-3)/30 group-hover:bg-(--base-2)" /* Removed backdrop-blur-md */
+          className="absolute top-3 right-3 w-9 h-9 bg-(--base-2)/90 rounded-xl flex items-center justify-center shadow-lg border border-(--base-3)/30 group-hover:bg-(--base-2) transition-transform duration-200 hover:scale-110 active:scale-90"
           aria-pressed={isFavorite}
           aria-label={isFavorite ? 'Remove from wishlist' : 'Add to wishlist'}
         >
           <Heart className={`w-4 h-4 transition-colors duration-300 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-(--text)/80 group-hover:text-(--main-1)'}`} />
-        </motion.button>
+        </button>
 
         {/* Category badge - redesigned */}
         <div className="absolute top-3 left-3 px-2 py-1 rounded-lg bg-(--main-1)/90 text-(--text) text-xs font-medium shadow-md border border-(--main-1)/20"> {/* Removed backdrop-blur-sm */}
@@ -94,16 +91,14 @@ const ProductCard = memo(forwardRef(function ProductCard(
         </div>
 
         {/* Add to Cart Button - Always Visible */}
-        <motion.button
+        <button
           onClick={handleAddToCart}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
+          className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-(--main-1) to-(--main-2) text-(--text) font-semibold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200"
           aria-label={`Add ${name} to bag`}
         >
           <ShoppingBag className="w-4 h-4" />
           {isAdding ? 'Added!' : 'Add to Bag'}
-        </motion.button>
+        </button>
       </div>
     </div>
   );

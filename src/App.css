@@ -8,9 +8,61 @@
   --text: white;
   --text-2: #9d9da9;
   --text-3: #71717a;
-  --text-4: #52525b;
-  --text-5: #3f3f46;
-  --text-6: white;
+}
+
+/* Performance optimizations */
+/* Enable GPU acceleration and optimize frequently animated elements */
+
+/* Framer motion elements - optimize with transform3d */
+[style*="transform"] {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Button hover effects */
+button {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+button:hover {
+  will-change: transform;
+}
+
+/* Product cards */
+.group:hover {
+  will-change: transform;
+}
+
+/* Scrollbar optimizations */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--base-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--base-3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--base-4);
+}
+
+/* Disable scrollbar for motion elements during animation */
+body {
+  scroll-behavior: auto;
+  overflow-x: hidden;
+}
+
+/* Optimize images */
+img {
+  backface-visibility: hidden;
 }
 
 
