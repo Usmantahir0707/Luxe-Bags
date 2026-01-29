@@ -67,18 +67,11 @@ function AppContent() {
 
   /* -------------------- LENIS SETUP -------------------- */
   useEffect(() => {
-    // Only initialize Lenis on larger screens (laptops and above)
-    // 1024px is a common breakpoint for laptops
-    if (window.innerWidth < 1024) {
-      console.log('Lenis NOT initialized on mobile (innerWidth < 1024px)');
-      return;
-    }
-
-    console.log('Lenis initialized for desktop (innerWidth >= 1024px)');
+    // Initialize Lenis for smooth scrolling on all devices
     const lenis = new Lenis({
       smooth: true,
-      smoothTouch: false, // Keep smoothTouch false for desktop only Lenis
-      lerp: 0.08, // Original lerp for desktop for subtle smoothness
+      smoothTouch: true, // Enable smooth scrolling on mobile devices
+      lerp: 0.08, // Lerp value for smooth scrolling
     });
 
     function raf(time) {
