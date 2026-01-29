@@ -35,7 +35,8 @@ export default function Hero() {
           <div className="absolute inset-0 flex items-center justify-center">
             <LoadingSpinner size="md" />
           </div>
-        )}
+        )} 
+        
         
         {/* Show error message if image fails to load */}
         {hasError && (
