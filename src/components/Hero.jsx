@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, memo } from "react";
@@ -8,6 +8,20 @@ import LoadingSpinner from "./LoadingSpinner";
 
 export default function Hero() {
   const navigate = useNavigate();
+
+  // Scroll-based animations for floating images
+  const { scrollYProgress } = useScroll();
+
+  // Transform ranges for smooth floating effect
+  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
+  // Spring settings for smooth animation
+  const springConfig = { stiffness: 60, damping: 20, mass: 0.8 };
+  const leftImageX = useSpring(leftXRaw, springConfig);
+  const rightImageX = useSpring(rightXRaw, springConfig);
+  const rightImageY = useSpring(rightYRaw, springConfig);
 
   // Simple image component with framer-motion opacity animation
   const SimpleImage = memo(({ src, alt, className }) => {
@@ -65,9 +79,10 @@ export default function Hero() {
         }} />
       </div>
 
-      {/* Floating Image Elements - Static positioning */}
+      {/* Floating Image Elements with Scroll Animation */}
       {/* Mobile: Create gap and adjust positioning, Desktop: Keep original layout */}
-      <div
+      <motion.div
+        style={{ x: leftImageX }}
         className="absolute top-1/2 -translate-y-1/2 left-10 sm:left-0 lg:left-8 z-5"
       >
         <SimpleImage
@@ -75,9 +90,10 @@ export default function Hero() {
           alt="Left Celebration"
           className="w-24 h-24 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-cover"
         />
-      </div>
+      </motion.div>
 
-      <div
+      <motion.div
+        style={{ y: rightImageY, x: rightImageX }}
         className="absolute top-1/2 -translate-y-1/2 right-10 sm:right-0 lg:right-8 z-5"
       >
         <SimpleImage
@@ -85,7 +101,7 @@ export default function Hero() {
           alt="Right Celebration"
           className="w-24 h-24 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-cover"
         />
-      </div>
+      </motion.div>
 
       {/* Main content */}
       <motion.div
