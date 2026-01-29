@@ -1,5 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 @import "tailwindcss";
 
-/* Custom balloon animations using JavaScript Math.random() */
-/* JavaScript-based animations provide true randomness */
+/* Optimized balloon animations */
+@keyframes balloon-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(10px, -10px) scale(1.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-5px, 15px) scale(1.05);
+    opacity: 0.9;
+  }
+  75% {
+    transform: translate(15px, 5px) scale(1.15);
+    opacity: 0.7;
+  }
+}
+
+.balloon-optimized {
+  display: inline-block;
+  position: absolute;
+  will-change: transform, opacity;
+  z-index: -1;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3), 0 0 4px rgba(0, 0, 0, 0.4), 0 0 2px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  animation: balloon-float 15s ease-in-out infinite;
+}
+
+/* Variation for staggered look */
+.balloon-optimized:nth-child(2n) {
+  animation-duration: 18s;
+  animation-delay: -2s;
+}
+.balloon-optimized:nth-child(3n) {
+  animation-duration: 22s;
+  animation-delay: -5s;
+}
+.balloon-optimized:nth-child(4n) {
+  animation-duration: 25s;
+  animation-delay: -8s;
+}

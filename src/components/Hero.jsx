@@ -1,8 +1,7 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Star, Award, Users, ShoppingBag } from "lucide-react";
+import { Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Balloon } from "../hooks/useBalloonAnimation";
+import { useState, memo } from "react";
 import leftCelebration from "../assets/left.png";
 import rightCelebration from "../assets/right.png";
 import LoadingSpinner from "./LoadingSpinner";
@@ -14,31 +13,19 @@ export default function Hero() {
   const { scrollYProgress } = useScroll();
 
   // Use more conservative transform ranges to reduce performance impact
-  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -800]);
-  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 800]);
-  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  // Reduced ranges for smoother experience and less work for the browser
+  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -400]);
+  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 400]);
+  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
-  // Use more performant spring settings
-  const leftImageX = useSpring(leftXRaw, {
-    stiffness: 100,
-    damping: 30,
-    mass: 0.5,
-  });
-
-  const rightImageX = useSpring(rightXRaw, {
-    stiffness: 100,
-    damping: 30,
-    mass: 0.5,
-  });
-
-  const rightImageY = useSpring(rightYRaw, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.5,
-  });
+  // Use simple spring settings for smoothness without overhead
+  const springConfig = { stiffness: 100, damping: 30, mass: 0.5 };
+  const leftImageX = useSpring(leftXRaw, springConfig);
+  const rightImageX = useSpring(rightXRaw, springConfig);
+  const rightImageY = useSpring(rightYRaw, springConfig);
 
   // Simple image component with framer-motion opacity animation
-  const SimpleImage = ({ src, alt, className }) => {
+  const SimpleImage = memo(({ src, alt, className }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
 
@@ -74,14 +61,14 @@ export default function Hero() {
         />
       </div>
     );
-  };
+  });
 
-  const stats = [
-    { icon: Users, label: "Happy Customers", value: "10K+" },
-    { icon: ShoppingBag, label: "Premium Bags", value: "500+" },
-    { icon: Award, label: "Years Experience", value: "15+" },
-    { icon: Star, label: "Average Rating", value: "4.9" }
-  ];
+  const Balloon = memo(({ className, style }) => (
+    <span
+      className={`balloon-optimized ${className}`}
+      style={style}
+    />
+  ));
 
   return (
     <section className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
@@ -130,7 +117,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="inline-flex mt-3 items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-(--main-1)/20 to-(--main-2)/20 border border-(--main-1)/30 text-(--main-1) text-xs font-medium mb-8"
+          className="inline-flex mt-3 items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-(--main-1)/20 to-(--main-2)/20 border border-(--main-1)/30 text-(--main-1) text-xs font-medium mb-8"
         >
           <Award className="w-4 h-4" />
           New Year 2026 Sale
@@ -145,20 +132,20 @@ export default function Hero() {
         >
           <span className="block text-(--text) mb-1 relative">
             New Year 2026
-            <Balloon options={{ maxX: 40, maxY: 30, maxRotation: 15 }} className="absolute -top-2 -right-2 w-5 h-5 bg-(--main-1) rounded-full opacity-80"></Balloon>
-            <Balloon options={{ maxX: 70, maxY: 45, maxRotation: 12 }} className="absolute -top-1 -left-1 w-5 h-5 bg-(--main-2) rounded-full"></Balloon>
-            <Balloon options={{ maxX: 35, maxY: 28, maxRotation: 18 }} className="absolute top-1 right-4 w-3 h-3 bg-rose-500 rounded-full"></Balloon>
-            <Balloon options={{ maxX: 45, maxY: 35, maxRotation: 14 }} className="absolute -bottom-1 left-6 w-5 h-5 bg-amber-400 rounded-full"></Balloon>
-            <Balloon options={{ maxX: 40, maxY: 32, maxRotation: 16 }} className="absolute top-3 -right-6 w-4 h-4 bg-emerald-400 rounded-full"></Balloon>
+            <Balloon className="absolute -top-2 -right-2 w-5 h-5 bg-(--main-1) rounded-full opacity-80" />
+            <Balloon className="absolute -top-1 -left-1 w-5 h-5 bg-(--main-2) rounded-full" />
+            <Balloon className="absolute top-1 right-4 w-3 h-3 bg-rose-500 rounded-full" />
+            <Balloon className="absolute -bottom-1 left-6 w-5 h-5 bg-amber-400 rounded-full" />
+            <Balloon className="absolute top-3 -right-6 w-4 h-4 bg-emerald-400 rounded-full" />
           </span>
-          <span className="bg-gradient-to-r from-(--main-1) to-(--main-2) bg-clip-text text-transparent font-extrabold text-5xl sm:text-6xl md:text-7xl relative">
+          <span className="bg-linear-to-r from-(--main-1) to-(--main-2) bg-clip-text text-transparent font-extrabold text-5xl sm:text-6xl md:text-7xl relative">
              Sale upto 50%OFF
-             <Balloon options={{ maxX: 50, maxY: 40, maxRotation: 20 }} className="absolute -bottom-1 -left-2 w-6 h-6 border-2 border-(--main-1) rounded-full opacity-60"></Balloon>
-             <Balloon options={{ maxX: 35, maxY: 28, maxRotation: 15 }} className="absolute -top-1 -right-4 w-3 h-3 bg-(--main-2) rounded-full"></Balloon>
-             <Balloon options={{ maxX: 45, maxY: 35, maxRotation: 18 }} className="absolute -bottom-2 -right-8 w-4 h-4 bg-amber-400 rounded-full"></Balloon>
-             <Balloon options={{ maxX: 40, maxY: 30, maxRotation: 14 }} className="absolute top-2 left-0 w-4 h-4 bg-emerald-400 rounded-full"></Balloon>
-             <Balloon options={{ maxX: 155, maxY: 145, maxRotation: 22 }} className="absolute -top-3 right-8 w-3 h-3 bg-violet-500 rounded-full"></Balloon>
-             <Balloon options={{ maxX: 40, maxY: 32, maxRotation: 16 }} className="absolute -bottom-3 left-8 w-3 h-3 bg-rose-500 rounded-full"></Balloon>
+             <Balloon className="absolute -bottom-1 -left-2 w-6 h-6 border-2 border-(--main-1) rounded-full opacity-60" />
+             <Balloon className="absolute -top-1 -right-4 w-3 h-3 bg-(--main-2) rounded-full" />
+             <Balloon className="absolute -bottom-2 -right-8 w-4 h-4 bg-amber-400 rounded-full" />
+             <Balloon className="absolute top-2 left-0 w-4 h-4 bg-emerald-400 rounded-full" />
+             <Balloon className="absolute -top-3 right-8 w-3 h-3 bg-violet-500 rounded-full" />
+             <Balloon className="absolute -bottom-3 left-8 w-3 h-3 bg-rose-500 rounded-full" />
           </span>
         </motion.h1>
         </div>
@@ -186,7 +173,7 @@ export default function Hero() {
             whileHover={{ scale: 1.08, boxShadow: "0 10px 25px rgba(0,0,0,0.3)" }}
             whileTap={{ scale: 0.95 }}
             onClick={() => document.getElementById("products")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-10 py-4 bg-gradient-to-r from-(--main-1) via-(--main-2) to-(--main-1) text-(--text) font-bold text-lg border-2 border-(--main-1) rounded-full hover:opacity-90 hover:text-(--text-6) transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="px-10 py-4 bg-linear-to-r from-(--main-1) via-(--main-2) to-(--main-1) text-(--text) font-bold text-lg border-2 border-(--main-1) rounded-full hover:opacity-90 hover:text-(--text-6) transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Shop Now
           </motion.button>
