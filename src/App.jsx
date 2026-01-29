@@ -69,8 +69,12 @@ function AppContent() {
   useEffect(() => {
     // Only initialize Lenis on larger screens (laptops and above)
     // 1024px is a common breakpoint for laptops
-    if (window.innerWidth < 1024) return;
+    if (window.innerWidth < 1024) {
+      console.log('Lenis NOT initialized on mobile (innerWidth < 1024px)');
+      return;
+    }
 
+    console.log('Lenis initialized for desktop (innerWidth >= 1024px)');
     const lenis = new Lenis({
       smooth: true,
       smoothTouch: false, // Keep smoothTouch false for desktop only Lenis
