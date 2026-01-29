@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Lock, Save, ArrowLeft, Eye, EyeOff, Trash2, AlertTriangle } from 'lucide-react';
 import { useShopContext } from '../context/ShopContext';
 import { toast } from 'sonner';

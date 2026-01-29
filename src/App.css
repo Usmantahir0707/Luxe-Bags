@@ -10,33 +10,7 @@
   --text-3: #71717a;
 }
 
-/* Performance optimizations */
-/* Enable GPU acceleration and optimize frequently animated elements */
-
-/* Framer motion elements - optimize with transform3d */
-[style*="transform"] {
-  will-change: transform;
-  backface-visibility: hidden;
-  perspective: 1000px;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Button hover effects */
-button {
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-button:hover {
-  will-change: transform;
-}
-
-/* Product cards */
-.group:hover {
-  will-change: transform;
-}
-
-/* Scrollbar optimizations */
+/* Lightweight scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -54,15 +28,8 @@ button:hover {
   background: var(--base-4);
 }
 
-/* Disable scrollbar for motion elements during animation */
 body {
-  scroll-behavior: auto;
   overflow-x: hidden;
-}
-
-/* Optimize images */
-img {
-  backface-visibility: hidden;
 }
 
 
@@ -235,7 +202,6 @@ img {
 }
 
 /* Custom button hover effect */
-/* 1 */
 .custom-hover {
   position: relative;
   overflow: hidden;
@@ -256,27 +222,4 @@ img {
 
 .custom-hover:hover::before {
   height: 100%;
-}
-
-/* 2 */
-.custom-hover2 {
-  position: relative;
-  overflow: hidden;
-}
-
-.custom-hover2::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 130%;
-  height: 0;
-  background: var(--main-1);
-  transition: height 0.3s ease;
-  border-radius: inherit;
-  z-index: -1;
-}
-
-.custom-hover2:hover::before {
-  height: 130%;
 }

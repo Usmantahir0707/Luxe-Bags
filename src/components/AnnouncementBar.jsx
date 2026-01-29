@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Facebook, Instagram, Youtube, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AnnouncementBar = () => {
@@ -63,18 +63,16 @@ const AnnouncementBar = () => {
           </button>
 
           <div className="flex-1 text-center px-2 sm:px-4">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentMessageIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="text-xs sm:text-sm font-medium whitespace-nowrap"
-              >
-                {messages[currentMessageIndex]}
-              </motion.p>
-            </AnimatePresence>
+            <motion.p
+              key={currentMessageIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              {messages[currentMessageIndex]}
+            </motion.p>
           </div>
 
           <button

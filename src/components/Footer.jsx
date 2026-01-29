@@ -1,5 +1,5 @@
 // src/components/Footer.jsx
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { ShoppingBag, Facebook, Instagram, Twitter, Mail, MapPin, Phone, Send, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { modalContents } from './modalContents';
