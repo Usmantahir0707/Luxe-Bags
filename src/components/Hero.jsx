@@ -1,63 +1,21 @@
-import { motion, useScroll, useSpring, useTransform, useMotionValue } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, memo, useEffect, useRef } from "react";
+import { useState, memo, useEffect } from "react";
 import leftCelebration from "../assets/left.png";
 import rightCelebration from "../assets/right.png";
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function Hero() {
   const navigate = useNavigate();
-  const containerRef = useRef(null);
-
-  // Robust scroll tracking: combine framer's scroll progress and window scroll
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-
-  // Motion value that will always reflect pixel scroll position (fallbacks included)
-  const scrollPixels = useMotionValue(0);
-
-  useEffect(() => {
-    // Update from framer's scroll progress when available
-    const unsubscribe = scrollYProgress.onChange((v) => {
-      // map progress (0..1) to pixels roughly equal to viewport height
-      const pixel = v * (window.innerHeight || document.documentElement.clientHeight || 1);
-      scrollPixels.set(pixel);
-    });
-
-    // Fallback: also track native window scroll to ensure compatibility with smooth scrollers
-    const onScroll = () => scrollPixels.set(window.scrollY || document.documentElement.scrollTop || 0);
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    // RAF poll to catch any programmatic scrolling (Lenis or others)
-    let rafId = 0;
-    const tick = () => {
-      scrollPixels.set(window.scrollY || document.documentElement.scrollTop || 0);
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    // Listen to Lenis-emitted scroll events (if Lenis is present)
-    const onLenisScroll = (e) => {
-      const y = e?.detail?.y ?? 0;
-      scrollPixels.set(y);
-    };
-    window.addEventListener('lenis:scroll', onLenisScroll);
-
-    return () => {
-      unsubscribe();
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('lenis:scroll', onLenisScroll);
-      cancelAnimationFrame(rafId);
-    };
-  }, [scrollYProgress, scrollPixels]);
+  // Optimized scroll-based animations for image elements
+  const { scrollYProgress } = useScroll();
 
   // Optimized transform ranges for a buttery smooth experience
   // Using lower values for mobile to keep it responsive
-  const leftXRaw = useTransform(scrollPixels, [0, 500], [0, -300]);
-  const rightXRaw = useTransform(scrollPixels, [0, 500], [0, 300]);
-  const rightYRaw = useTransform(scrollPixels, [0, 500], [0, 80]);
+  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   // Optimized spring settings for fluid movement across all devices
   const springConfig = { stiffness: 60, damping: 20, mass: 0.8 };
@@ -113,7 +71,7 @@ export default function Hero() {
   ));
 
   return (
-    <section ref={containerRef} className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
+    <section className="relative min-h-[90dvh] md:min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-(--base-1) via-(--base-1) to-(--base-2)/50">
       {/* Simple background pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute inset-0" style={{

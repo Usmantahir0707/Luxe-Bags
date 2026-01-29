@@ -83,18 +83,7 @@ function AppContent() {
       touchMultiplier: 2,
     });
 
-    // expose lenis for components and emit scroll events for compatibility
-    try {
-      if (typeof lenis.on === 'function') {
-        lenis.on('scroll', ({ scroll }) => {
-          window.dispatchEvent(new CustomEvent('lenis:scroll', { detail: { y: scroll } }));
-        });
-      }
-    } catch (e) {
-      // ignore
-    }
-    // attach for debugging access
-    window.lenis = lenis;
+    // Lenis initialized (no additional handlers attached)
 
     let animationFrameId;
     
