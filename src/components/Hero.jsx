@@ -1,4 +1,4 @@
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, memo } from "react";
@@ -10,18 +10,12 @@ export default function Hero() {
   const navigate = useNavigate();
 
   // Scroll-based animations for floating images
-  const { scrollYProgress } = useScroll();
+  const { scrollY } = useScroll();
 
-  // Transform ranges for smooth floating effect
-  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 300]);
-  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 80]);
-
-  // Spring settings for smooth animation
-  const springConfig = { stiffness: 60, damping: 20, mass: 0.8 };
-  const leftImageX = useSpring(leftXRaw, springConfig);
-  const rightImageX = useSpring(rightXRaw, springConfig);
-  const rightImageY = useSpring(rightYRaw, springConfig);
+  // Transform ranges for smooth floating effect - using scrollY for better control
+  const leftImageX = useTransform(scrollY, [0, 500], [0, -300]);
+  const rightImageX = useTransform(scrollY, [0, 500], [0, 300]);
+  const rightImageY = useTransform(scrollY, [0, 500], [0, 80]);
 
   // Simple image component with framer-motion opacity animation
   const SimpleImage = memo(({ src, alt, className }) => {
@@ -36,7 +30,7 @@ export default function Hero() {
             <LoadingSpinner size="md" />
           </div>
         )} 
-        
+
         
         {/* Show error message if image fails to load */}
         {hasError && (
