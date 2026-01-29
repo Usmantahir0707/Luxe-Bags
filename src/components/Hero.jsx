@@ -11,12 +11,21 @@ export default function Hero() {
 
   // Optimized scroll-based animations for image elements
   const { scrollYProgress } = useScroll();
+  const [isLaptop, setIsLaptop] = useState(window.innerWidth >= 1024);
+
+  // Update laptop state on resize
+  useState(() => {
+    const handleResize = () => setIsLaptop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Use more conservative transform ranges to reduce performance impact
   // Reduced ranges for smoother experience and less work for the browser
-  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, -400]);
-  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, 400]);
-  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, 50]);
+  // Movement only active for laptops and above
+  const leftXRaw = useTransform(scrollYProgress, [0, 1], [0, isLaptop ? -400 : 0]);
+  const rightXRaw = useTransform(scrollYProgress, [0, 1], [0, isLaptop ? 400 : 0]);
+  const rightYRaw = useTransform(scrollYProgress, [0, 1], [0, isLaptop ? 50 : 0]);
 
   // Use simple spring settings for smoothness without overhead
   const springConfig = { stiffness: 100, damping: 30, mass: 0.5 };
