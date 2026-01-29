@@ -69,7 +69,7 @@ function AppContent() {
   useEffect(() => {
     const lenis = new Lenis({
       smooth: true,
-      smoothTouch: true, // ✅ enables smooth scrolling on mobile
+      smoothTouch: false, // ✅ enables smooth scrolling on mobile
       lerp: 0.08,
     });
 
