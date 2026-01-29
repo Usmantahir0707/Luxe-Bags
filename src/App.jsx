@@ -67,11 +67,14 @@ function AppContent() {
 
   /* -------------------- LENIS SETUP -------------------- */
   useEffect(() => {
+    // Only initialize Lenis on larger screens (laptops and above)
+    // 1024px is a common breakpoint for laptops
+    if (window.innerWidth < 1024) return;
+
     const lenis = new Lenis({
       smooth: true,
-      smoothTouch: true, // Re-enable for mobile to see if it improves jitters
-      lerp: 0.1, // Slightly faster lerp for snappier feel
-      touchMultiplier: 1.5,
+      smoothTouch: false, // Keep smoothTouch false for desktop only Lenis
+      lerp: 0.08, // Original lerp for desktop for subtle smoothness
     });
 
     function raf(time) {
@@ -81,6 +84,7 @@ function AppContent() {
 
     requestAnimationFrame(raf);
 
+    // Cleanup on unmount
     return () => {
       lenis.destroy();
     };

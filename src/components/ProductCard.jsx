@@ -38,13 +38,10 @@ const ProductCard = memo(forwardRef(function ProductCard(
     >
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-(--base-2) to-(--base-3)/30 aspect-square shadow-xl border border-(--base-3)/20">
         {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-(--main-1)/10 to-transparent rounded-full -translate-y-16 translate-x-16" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-(--main-2)/8 to-transparent rounded-full translate-y-12 -translate-x-12" />
-
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
           {/* Show spinner while loading */}
           {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
               <LoadingSpinner size="lg" />
             </div>
           )}
@@ -59,7 +56,7 @@ const ProductCard = memo(forwardRef(function ProductCard(
             width="400"
             height="400"
             onLoad={() => setImageLoaded(true)}
-            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
           />
         </div>
 
@@ -68,7 +65,7 @@ const ProductCard = memo(forwardRef(function ProductCard(
           onClick={(e) => { e.stopPropagation(); setIsFavorite(prev => !prev); }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="absolute top-3 right-3 w-9 h-9 bg-(--base-2)/90 backdrop-blur-md rounded-xl flex items-center justify-center shadow-lg border border-(--base-3)/30 group-hover:bg-(--base-2)"
+          className="absolute top-3 right-3 w-9 h-9 bg-(--base-2)/90 rounded-xl flex items-center justify-center shadow-lg border border-(--base-3)/30 group-hover:bg-(--base-2)" /* Removed backdrop-blur-md */
           aria-pressed={isFavorite}
           aria-label={isFavorite ? 'Remove from wishlist' : 'Add to wishlist'}
         >
@@ -76,7 +73,7 @@ const ProductCard = memo(forwardRef(function ProductCard(
         </motion.button>
 
         {/* Category badge - redesigned */}
-        <div className="absolute top-3 left-3 px-2 py-1 rounded-lg bg-(--main-1)/90 backdrop-blur-sm text-(--text) text-xs font-medium shadow-md border border-(--main-1)/20">
+        <div className="absolute top-3 left-3 px-2 py-1 rounded-lg bg-(--main-1)/90 text-(--text) text-xs font-medium shadow-md border border-(--main-1)/20"> {/* Removed backdrop-blur-sm */}
           {category}
         </div>
       </div>

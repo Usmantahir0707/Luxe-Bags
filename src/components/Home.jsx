@@ -165,6 +165,7 @@ export default function Home() {
                       <img
                         src={category.image}
                         alt={category.name}
+                        loading="lazy" /* Added lazy loading for category images */
                         className="w-full h-full object-cover rounded-full"
                       />
                     </div>
