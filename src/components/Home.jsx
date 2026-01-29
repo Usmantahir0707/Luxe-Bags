@@ -141,20 +141,13 @@ export default function Home() {
               </p>
 
               {/* Categories */}
-              <motion.div
-
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10  items-center">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10  items-center">
 
                 {shopCategories.map((category) => (
-                  <motion.button
-                    initial={{scale: 0.8, y: 40}}
-                    whileInView={{scale: 1, y: 0}}
-                    transition={{duration: 0.7}}
+                  <button
                     key={category.name}
                     onClick={() => navigate(category.href)}
                     className="group flex flex-col items-center focus:outline-none"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     {/* Circle */}
                     <div className="w-24 h-24 rounded-full bg-(--base-2) flex items-center justify-center
@@ -174,9 +167,9 @@ export default function Home() {
                     <span className="mt-4 text-sm font-medium text-(--text)">
                       {category.name}
                     </span>
-                  </motion.button>
+                  </button>
                 ))}
-              </motion.div>
+              </div>
 
               {/* View All */}
               <div className="mt-16">
