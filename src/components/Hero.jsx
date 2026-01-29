@@ -1,7 +1,7 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import leftCelebration from "../assets/left.png";
 import rightCelebration from "../assets/right.png";
 import LoadingSpinner from "./LoadingSpinner";
