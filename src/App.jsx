@@ -67,9 +67,13 @@ function AppContent() {
 
   /* -------------------- LENIS SETUP -------------------- */
   useEffect(() => {
+    // Only initialize Lenis on larger screens (laptops and above)
+    // 1024px is a common breakpoint for laptops
+    if (window.innerWidth < 1024) return;
+
     const lenis = new Lenis({
       smooth: true,
-      smoothTouch: false, // ✅ enables smooth scrolling on mobile
+      smoothTouch: false,
       lerp: 0.08,
     });
 
@@ -80,8 +84,18 @@ function AppContent() {
 
     requestAnimationFrame(raf);
 
+    // Update Lenis on window resize
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        lenis.destroy();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
     return () => {
       lenis.destroy();
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
   /* ---------------------------------------------------- */
