@@ -24,13 +24,14 @@
 .balloon-optimized {
   display: inline-block;
   position: absolute;
-  will-change: transform, opacity;
+  will-change: transform;
   z-index: -1;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3), 0 0 4px rgba(0, 0, 0, 0.4), 0 0 2px rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Simplified shadow */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  backdrop-filter: blur(4px);
+  /* Removed backdrop-filter as it's very heavy on mobile */
   animation: balloon-float 15s ease-in-out infinite;
+  pointer-events: none; /* Ensure they don't interfere with touch */
 }
 
 /* Variation for staggered look */
