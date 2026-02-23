@@ -7,31 +7,14 @@
     <!-- Resource Hints for Performance -->
     <link rel="preconnect" href="https://luxe-bags-server.onrender.com" />
     <link rel="dns-prefetch" href="https://luxe-bags-server.onrender.com" />   
-    <!-- StoreAI Integration Snippet -->
-<script>
-  (function() {
-    var s = document.createElement('script');
-    s.src = 'http://localhost:5000/snippet.js';
-    s.async = true;
-    s.setAttribute('data-store-token', '463936e948fbc264be8e777e4fbc048f8136e1d2433f3bf9eb83c292f3c01e43');
-    document.head.appendChild(s);
-  })();
-</script>
-<!-- End StoreAI Snippet --> 
-    <title>luxe-bags</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    
-<!-- StoreAI Analytics Snippet -->
+   <!-- StoreAI Analytics Snippet -->
 <script>
 (function() {
-  var storeToken = '9af4706dc46df29a2f6afaa5bea8fce837b3bbd339c0a8a5d6fcce1d61eaca7a';
-  var endpoint = 'https://api.storeai.io/api/kpi/ingest';
+  var storeToken = '6a6551f731be976b9c1d2d0b5ae4858db3f9718d7820f3fbdd9707a180b8349d';
+  var endpoint = 'http://localhost:5000/api/v1/kpi/ingest';
   
   // Collect non-sensitive KPI data
-  var kpiData = {
+  var metrics = {
     totalVisitors: 1,
     conversionRate: window.storeAI && window.storeAI.conversionRate || 0,
     bounceRate: window.storeAI && window.storeAI.bounceRate || 0,
@@ -41,11 +24,11 @@
   };
   
   // Send data to StoreAI
+  var payload = JSON.stringify({ metrics: metrics });
+  
   if (navigator.sendBeacon) {
-    navigator.sendBeacon(endpoint, JSON.stringify({
-      storeToken: storeToken,
-      data: kpiData
-    }));
+    var blob = new Blob([payload], { type: 'application/json' });
+    navigator.sendBeacon(endpoint, blob);
   } else {
     fetch(endpoint, {
       method: 'POST',
@@ -53,13 +36,18 @@
         'Content-Type': 'application/json',
         'X-Store-Token': storeToken
       },
-      body: JSON.stringify(kpiData),
+      body: payload,
       keepalive: true
     }).catch(function() {});
   }
 })();
 </script>
 <!-- End StoreAI Analytics Snippet -->
-
+    <title>luxe-bags</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+ 
   </body>
 </html>
