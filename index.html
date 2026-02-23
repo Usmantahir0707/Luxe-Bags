@@ -7,11 +7,18 @@
     <!-- Resource Hints for Performance -->
     <link rel="preconnect" href="https://luxe-bags-server.onrender.com" />
     <link rel="dns-prefetch" href="https://luxe-bags-server.onrender.com" />   
-   <!-- StoreAI Analytics Snippet -->
+  
+    <title>luxe-bags</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+   
+<!-- StoreAI Analytics Snippet -->
 <script>
 (function() {
-  var storeToken = '6a6551f731be976b9c1d2d0b5ae4858db3f9718d7820f3fbdd9707a180b8349d';
-  var endpoint = 'http://localhost:5000/api/v1/kpi/ingest';
+  var storeToken = 'b81fe805c161baee736c290154b28bed09c795ffa6529a0228bea2b79c39299e';
+  var endpoint = 'http://localhost:3000/api/v1/kpi/ingest';
   
   // Collect non-sensitive KPI data
   var metrics = {
@@ -23,8 +30,11 @@
     revenue: window.storeAI && window.storeAI.revenue || 0
   };
   
-  // Send data to StoreAI
-  var payload = JSON.stringify({ metrics: metrics });
+  // Send data to StoreAI - include token in body since sendBeacon doesn't support headers
+  var payload = JSON.stringify({ 
+    storeToken: storeToken,
+    metrics: metrics 
+  });
   
   if (navigator.sendBeacon) {
     var blob = new Blob([payload], { type: 'application/json' });
@@ -43,11 +53,6 @@
 })();
 </script>
 <!-- End StoreAI Analytics Snippet -->
-    <title>luxe-bags</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
- 
+
   </body>
 </html>
