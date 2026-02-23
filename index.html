@@ -23,5 +23,43 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+<!-- StoreAI Analytics Snippet -->
+<script>
+(function() {
+  var storeToken = '9af4706dc46df29a2f6afaa5bea8fce837b3bbd339c0a8a5d6fcce1d61eaca7a';
+  var endpoint = 'https://api.storeai.io/api/kpi/ingest';
+  
+  // Collect non-sensitive KPI data
+  var kpiData = {
+    totalVisitors: 1,
+    conversionRate: window.storeAI && window.storeAI.conversionRate || 0,
+    bounceRate: window.storeAI && window.storeAI.bounceRate || 0,
+    topSearchTerms: window.storeAI && window.storeAI.topSearchTerms || [],
+    cartAbandonmentRate: window.storeAI && window.storeAI.cartAbandonmentRate || 0,
+    revenue: window.storeAI && window.storeAI.revenue || 0
+  };
+  
+  // Send data to StoreAI
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(endpoint, JSON.stringify({
+      storeToken: storeToken,
+      data: kpiData
+    }));
+  } else {
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Store-Token': storeToken
+      },
+      body: JSON.stringify(kpiData),
+      keepalive: true
+    }).catch(function() {});
+  }
+})();
+</script>
+<!-- End StoreAI Analytics Snippet -->
+
   </body>
 </html>
