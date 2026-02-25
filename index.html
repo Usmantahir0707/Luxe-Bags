@@ -17,45 +17,7 @@
 
 
 
-<!-- StoreAI Analytics Snippet -->
-<script>
-(function() {
-  var storeToken = '880c2403caf32b27965f52b7d9cbaf554f17cdecd852aa0d1075d9479449f0c5';
-  var endpoint = 'https://store-ai-server-production.up.railway.app/api/v1/kpi/ingest';
-  
-  // Collect non-sensitive KPI data
-  var metrics = {
-    totalVisitors: 1,
-    conversionRate: window.storeAI && window.storeAI.conversionRate || 0,
-    bounceRate: window.storeAI && window.storeAI.bounceRate || 0,
-    topSearchTerms: window.storeAI && window.storeAI.topSearchTerms || [],
-    cartAbandonmentRate: window.storeAI && window.storeAI.cartAbandonmentRate || 0,
-    revenue: window.storeAI && window.storeAI.revenue || 0
-  };
-  
-  // Send data to StoreAI - include token in body since sendBeacon doesn't support headers
-  var payload = JSON.stringify({ 
-    storeToken: storeToken,
-    metrics: metrics 
-  });
-  
-  if (navigator.sendBeacon) {
-    var blob = new Blob([payload], { type: 'application/json' });
-    navigator.sendBeacon(endpoint, blob);
-  } else {
-    fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Store-Token': storeToken
-      },
-      body: payload,
-      keepalive: true
-    }).catch(function() {});
-  }
-})();
-</script>
-<!-- End StoreAI Analytics Snippet -->
+<script src="https://store-ai-server-production.up.railway.app/js/storeai.js" data-storeai-token="a3faaf71fbc9967a73ab72030de248d2123fdb0dedead8b621e091fe58711d17" async></script>
 
 
 
